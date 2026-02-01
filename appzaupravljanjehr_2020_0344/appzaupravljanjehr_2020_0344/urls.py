@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from users.views import login_view, logout_view
+from users.views import login_view, logout_view, profile_view
 from django.shortcuts import redirect
 
 urlpatterns = [
@@ -24,4 +24,5 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('admin/', admin.site.urls),
     path('', lambda request: redirect('login')),
+    path('profile/', profile_view, name='profile'),
 ]

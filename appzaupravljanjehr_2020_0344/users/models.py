@@ -10,7 +10,7 @@ class KorisnikManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
-        # OBAVEZNA POLJA – default vrednosti
+        
         extra_fields.setdefault("jmbg", "0000000000000")
         extra_fields.setdefault("srednje_ime", "-")
         extra_fields.setdefault("pol", "Z")

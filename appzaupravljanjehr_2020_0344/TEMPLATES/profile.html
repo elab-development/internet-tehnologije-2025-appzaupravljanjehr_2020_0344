@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Profil korisnika{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: calc(100vh - 100px);
+        padding: 40px 20px;
+        background: #E0F2FE;
+    }
+
+    .profile-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 1000px; 
+        padding: 60px 50px; 
+        position: relative;
+        font-size: 18px; 
+    }
+
+    .edit-profile {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        text-decoration: none;
+        background: #435e8d; 
+        color: #fff; 
+        font-weight: 600;
+        font-size: 14px; 
+        padding: 6px 14px; 
+        border-radius: 6px;
+        border: 2px solid #435e8d; 
+        transition: background 0.2s, transform 0.2s;
+    }
+
+    .edit-profile:hover {
+        background: #435e8d;
+        transform: translateY(-1px);
+    }
+
+    .section-title {
+        font-weight: 700;
+        color: #1E40AF;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-size: 20px; 
+        border-bottom: 1px solid #CBD5E1;
+        padding-bottom: 5px;
+    }
+
+    .profile-item {
+        margin-bottom: 16px;
+        color: #334155;
+    }
+
+    .profile-item span {
+        font-weight: 600;
+        color: #1E293B;
+        display: inline-block;
+        width: 200px; 
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-wrapper">
+    <div class="profile-card">
+
+        <a href="{% url 'profile' %}" class="edit-profile">Izmeni profil</a>
+
+        
+        <div class="section-title">Lični podaci</div>
+        <div class="profile-item"><span>Ime:</span> {{ user.first_name }}</div>
+        <div class="profile-item"><span>Srednje ime:</span> {{ user.srednje_ime }}</div>
+        <div class="profile-item"><span>Prezime:</span> {{ user.last_name }}</div>
+        <div class="profile-item"><span>JMBG:</span> {{ user.jmbg }}</div>
+        <div class="profile-item"><span>Pol:</span> {{ user.pol }}</div>
+        <div class="profile-item"><span>Datum rođenja:</span> {{ user.datum_rodjenja|date:"d.m.Y" }}</div>
+        <div class="profile-item"><span>Mesto rođenja:</span> {{ user.mesto_rodjenja |default:"—" }}</div>
+        <div class="profile-item"><span>Država:</span> {{ user.drzava|default:"—" }}</div>
+
+        <div class="section-title">Kontakt podaci</div>
+        <div class="profile-item"><span>Adresa:</span> {{ user.adresa }}</div>
+        <div class="profile-item"><span>Telefon:</span> {{ user.broj_telefona }}</div>
+        <div class="profile-item"><span>Email:</span> {{ user.email }}</div>
+
+        <div class="section-title">Poslovni podaci</div>
+        <div class="profile-item"><span>Organizaciona jedinica:</span> {{ user.organizaciona_jedinica.naziv |default:"—"}}</div>
+        <div class="profile-item"><span>Radno mesto:</span> {{ user.radno_mesto.naziv |default:"—" }}</div>
+        <div class="profile-item"><span>Rukovodilac:</span> {{ user.rukovodilac.get_full_name |default:"—" }}</div>
+        <div class="profile-item"><span>Stručna sprema:</span> {{ user.strucna_sprema }}</div>
+        <div class="profile-item"><span>Status:</span> {{ user.role }}</div>
+
+    </div>
+</div>
+{% endblock %}
