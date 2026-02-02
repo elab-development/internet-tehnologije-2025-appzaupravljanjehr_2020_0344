@@ -1,0 +1,348 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if is_create_mode %}Kreiraj profil{% else %}Izmeni profil{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .edit-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: calc(100vh - 100px);
+        padding: 40px 20px;
+        background: #E0F2FE;
+    }
+
+    .edit-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 1000px; 
+        padding: 60px 50px; 
+        font-size: 18px; 
+    }
+
+    .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #CBD5E1;
+    }
+
+    .form-title {
+        font-weight: 700;
+        color: #1E40AF;
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .form-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-save, .btn-cancel {
+        padding: 8px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        border: 2px solid;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.2s;
+    }
+
+    .btn-save {
+        background: #28a745;
+        color: white;
+        border-color: #28a745;
+    }
+
+    .btn-save:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        text-decoration: none;
+        color: white;
+    }
+
+    .btn-cancel {
+        background: #dc3545;
+        color: white;
+        border-color: #dc3545;
+    }
+
+    .btn-cancel:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+        text-decoration: none;
+        color: white;
+    }
+
+    .section-title {
+        font-weight: 700;
+        color: #1E40AF;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-size: 20px; 
+        border-bottom: 1px solid #CBD5E1;
+        padding-bottom: 5px;
+    }
+
+    .form-item {
+        margin-bottom: 20px;
+    }
+
+    .form-item label {
+        display: block;
+        font-weight: 600;
+        color: #1E293B;
+        margin-bottom: 8px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 6px 10px;
+        border: 1px solid #CBD5E1;
+        border-radius: 6px;
+        font-size: 16px;
+        color: #334155;
+        background-color: #fff;
+        box-sizing: border-box;
+    }
+
+    .form-input:disabled {
+        background-color: #f8fafc;
+        color: #94a3b8;
+        cursor: not-allowed;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #435e8d;
+        box-shadow: 0 0 0 2px rgba(67, 94, 141, 0.2);
+    }
+
+    select.form-input {
+        cursor: pointer;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 20px;
+    }
+
+    .form-col {
+        flex: 1;
+    }
+
+    .help-text {
+        font-size: 14px;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+
+    .field-required::after {
+        content: " *";
+        color: #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="edit-wrapper">
+    <div class="edit-card">
+        <form method="post" action="{% if is_create_mode %}{% url 'profile_save' %}{% else %}{% url 'update_profile' %}{% endif %}">
+            {% csrf_token %}
+            
+            <div class="form-header">
+                <h1 class="form-title">
+                    {% if is_create_mode %}
+                    Kreiraj profil
+                    {% else %}
+                    Izmeni profil
+                    {% endif %}
+                </h1>
+                <div class="form-buttons">
+                    <button type="submit" class="btn-save">Sačuvaj</button>
+                    <a href="{% url 'profile' %}" class="btn-cancel">Otkaži</a>
+                </div>
+            </div>
+
+            <div class="section-title">Lični podaci</div>
+            
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="first_name" class="field-required">Ime</label>
+                        <input type="text" id="first_name" name="first_name" 
+                               value="{{ user.first_name|default:'' }}" 
+                               class="form-input" required>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="last_name" class="field-required">Prezime</label>
+                        <input type="text" id="last_name" name="last_name" 
+                               value="{{ user.last_name|default:'' }}" 
+                               class="form-input" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-item">
+                <label for="srednje_ime">Srednje ime</label>
+                <input type="text" id="srednje_ime" name="srednje_ime" 
+                       value="{{ user.srednje_ime|default:'' }}" 
+                       class="form-input">
+            </div>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="jmbg" class="field-required">JMBG</label>
+                        <input type="text" id="jmbg" name="jmbg" 
+                               value="{{ user.jmbg|default:'' }}" 
+                               class="form-input" 
+                               {% if not is_create_mode %}disabled{% endif %} 
+                               required
+                               pattern="[0-9]{13}"
+                               maxlength="13">
+                        <div class="help-text">
+                            {% if not is_create_mode %}
+                            JMBG se ne može menjati nakon kreiranja profila
+                            {% else %}
+                            Unesite 13 cifara
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="pol">Pol</label>
+                        <select id="pol" name="pol" class="form-input">
+                            <option value="">Odaberite pol</option>
+                            <option value="Muški" {% if user.pol == "Muški" %}selected{% endif %}>Muški</option>
+                            <option value="Ženski" {% if user.pol == "Ženski" %}selected{% endif %}>Ženski</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="datum_rodjenja">Datum rođenja</label>
+                        <input type="date" id="datum_rodjenja" name="datum_rodjenja" 
+                               value="{{ user.datum_rodjenja|date:'Y-m-d'|default:'' }}" 
+                               class="form-input">
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="mesto_rodjenja">Mesto rođenja</label>
+                        <input type="text" id="mesto_rodjenja" name="mesto_rodjenja" 
+                               value="{{ user.mesto_rodjenja|default:'' }}" 
+                               class="form-input"
+                               {% if not is_create_mode %}disabled{% endif %}>
+                        {% if not is_create_mode %}
+                        <div class="help-text">Mesto rođenja se ne može menjati</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-item">
+                <label for="drzava">Država</label>
+                <input type="text" id="drzava" name="drzava" 
+                       value="{{ user.drzava|default:'' }}" 
+                       class="form-input"
+                       {% if not is_create_mode %}disabled{% endif %}>
+                {% if not is_create_mode %}
+                <div class="help-text">Država se ne može menjati</div>
+                {% endif %}
+            </div>
+
+            <div class="section-title">Kontakt podaci</div>
+
+            <div class="form-item">
+                <label for="adresa">Adresa</label>
+                <input type="text" id="adresa" name="adresa" 
+                       value="{{ user.adresa|default:'' }}" 
+                       class="form-input">
+            </div>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="broj_telefona">Telefon</label>
+                        <input type="tel" id="broj_telefona" name="broj_telefona" 
+                               value="{{ user.broj_telefona|default:'' }}" 
+                               class="form-input">
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="email" class="field-required">Email</label>
+                        <input type="email" id="email" name="email" 
+                               value="{{ user.email|default:'' }}" 
+                               class="form-input" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">Poslovni podaci</div>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="strucna_sprema">Stručna sprema</label>
+                        <select id="strucna_sprema" name="strucna_sprema" class="form-input">
+                            <option value="">Odaberite stručnu spremu</option>
+                            <option value="Osnovna škola" {% if user.strucna_sprema == "Osnovna škola" %}selected{% endif %}>Osnovna škola</option>
+                            <option value="Srednja škola" {% if user.strucna_sprema == "Srednja škola" %}selected{% endif %}>Srednja škola</option>
+                            <option value="Viša škola" {% if user.strucna_sprema == "Viša škola" %}selected{% endif %}>Viša škola</option>
+                            <option value="Fakultet" {% if user.strucna_sprema == "Fakultet" %}selected{% endif %}>Fakultet</option>
+                            <option value="Master" {% if user.strucna_sprema == "Master" %}selected{% endif %}>Master</option>
+                            <option value="Doktorat" {% if user.strucna_sprema == "Doktorat" %}selected{% endif %}>Doktorat</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            {% if not is_create_mode %}
+            <div class="form-item">
+                <label>Organizaciona jedinica</label>
+                <input type="text" value="{{ user.organizaciona_jedinica.naziv|default:'—' }}" 
+                       class="form-input" disabled>
+                <div class="help-text">Organizaciona jedinica se ne može menjati ovde</div>
+            </div>
+
+            <div class="form-item">
+                <label>Radno mesto</label>
+                <input type="text" value="{{ user.radno_mesto.naziv|default:'—' }}" 
+                       class="form-input" disabled>
+                <div class="help-text">Radno mesto se ne može menjati ovde</div>
+            </div>
+
+            <div class="form-item">
+                <label>Rukovodilac</label>
+                <input type="text" value="{{ user.rukovodilac.get_full_name|default:'—' }}" 
+                       class="form-input" disabled>
+                <div class="help-text">Rukovodilac se ne može menjati ovde</div>
+            </div>
+
+            <div class="form-item">
+                <label>Status</label>
+                <input type="text" value="{{ user.role|default:'—' }}" 
+                       class="form-input" disabled>
+                <div class="help-text">Status se ne može menjati ovde</div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

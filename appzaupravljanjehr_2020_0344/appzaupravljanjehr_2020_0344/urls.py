@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from users.views import login_view, logout_view, profile_view
+from users.views import login_view, logout_view, profile_view, update_profile, profile_create, profile_save
 from django.shortcuts import redirect
 
 urlpatterns = [
@@ -25,4 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', lambda request: redirect('login')),
     path('profile/', profile_view, name='profile'),
+    path('profile/azuriraj/', update_profile, name='update_profile'),
+    path('profile/kreiraj/', profile_create, name='profile_create'),
+    path('profile/sacuvaj/', profile_save, name='profile_save'),
+ 
 ]
