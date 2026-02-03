@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}HR aplikacija{% endblock %}</title>
     <style>
-       
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -136,6 +135,67 @@
         .close-btn:hover {
             opacity: 1;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dropdown-toggle:hover {
+            opacity: 0.8;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #ffffff;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            z-index: 1001;
+            overflow: hidden;
+            padding-top: 8px;
+        }
+
+        .dropdown-menu a {
+            color: #334155;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-weight: 500;
+            font-size: 14px;
+            margin: 0;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f1f5f9;
+            text-decoration: none;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #e2e8f0;
+            margin: 0;
+        }
+
+
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -147,8 +207,21 @@
         </div>
         <div class="nav-links">
             <a href="{% url 'profile' %}">Ciljevi</a>
-            <a href="{% url 'users_list' %}">Korisnici</a>
             <a href="{% url 'profile' %}">Ocenjivanje</a>
+            <a href="{% url 'users_list' %}">Korisnici</a>
+            <div class="dropdown">
+                <button class="dropdown-toggle" title="Dodaj novo">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 24 24" width="24px" height="24px">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="{% url 'profile_create' %}">Novi korisnik</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="{% url 'organizaciona_jedinica_create' %}">Nova org. jedinica</a>
+                    <a href="{% url 'radno_mesto_create' %}">Novo radno mesto</a>
+                </div>
+            </div>
             <a href="{% url 'profile' %}" style="margin-left:1rem; display:flex; align-items:center;">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 24 24" width="24px" height="24px">
                     <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>

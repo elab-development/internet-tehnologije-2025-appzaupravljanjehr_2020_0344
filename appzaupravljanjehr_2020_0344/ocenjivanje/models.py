@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from firma.models import Organizaciona_jedinica, Radno_mesto
 from users.models import Korisnik
+from django.conf import settings
 
 class Oblast_ocenjivanja(models.Model):
     naziv = models.CharField(max_length=100)
@@ -16,13 +17,14 @@ class Tezinski_koeficijent(models.Model):
     koef_3 = models.DecimalField(max_digits=4, decimal_places=3)
     koef_4 = models.DecimalField(max_digits=4, decimal_places=3)
     koef_5 = models.DecimalField(max_digits=4, decimal_places=3)
-    radno_mesto = models.ForeignKey(Radno_mesto, on_delete=models.CASCADE)
-    oblast_ocenjivanja_1 = models.ForeignKey("OblastOcenjivanja", on_delete=models.CASCADE)
-    oblast_ocenjivanja_2 = models.ForeignKey("OblastOcenjivanja", on_delete=models.CASCADE)
-    oblast_ocenjivanja_3 = models.ForeignKey("OblastOcenjivanja", on_delete=models.CASCADE)
-    oblast_ocenjivanja_4 = models.ForeignKey("OblastOcenjivanja", on_delete=models.CASCADE)
-    oblast_ocenjivanja_5 = models.ForeignKey("OblastOcenjivanja", on_delete=models.CASCADE)
 
+    radno_mesto = models.ForeignKey(Radno_mesto, on_delete=models.CASCADE)
+
+    oblast_ocenjivanja_1 = models.ForeignKey(Oblast_ocenjivanja, on_delete=models.CASCADE, related_name='koeficijent_1')
+    oblast_ocenjivanja_2 = models.ForeignKey(Oblast_ocenjivanja, on_delete=models.CASCADE, related_name='koeficijent_2')
+    oblast_ocenjivanja_3 = models.ForeignKey(Oblast_ocenjivanja, on_delete=models.CASCADE, related_name='koeficijent_3')
+    oblast_ocenjivanja_4 = models.ForeignKey(Oblast_ocenjivanja, on_delete=models.CASCADE, related_name='koeficijent_4')
+    oblast_ocenjivanja_5 = models.ForeignKey(Oblast_ocenjivanja, on_delete=models.CASCADE, related_name='koeficijent_5')
 
     def clean(self):
         ukupno = sum([
@@ -51,13 +53,14 @@ class Tezinski_koeficijent(models.Model):
     class Meta:
         verbose_name = "Težinski koeficijent"
         verbose_name_plural = "Težinski koeficijenti"
-        unique_together = ('radno_mesto', 'oblast_ocenjivanja')
+        
 
 
 class Ocena_zaposlenog(models.Model):
     zaposleni = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="ocene")
-    rukovodilac = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name="ocenjivac")
-    tezinski_koeficijent = models.ForeignKey("TezinskiKoeficijent", on_delete=models.SET_NULL)
+    rukovodilac = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name="ocenjivac", null=True, blank=True)
+
+    tezinski_koeficijent = models.ForeignKey(Tezinski_koeficijent, on_delete=models.SET_NULL, null=True, blank=True)
 
     ocena_1 = models.IntegerField()
     ocena_2 = models.IntegerField()
@@ -101,13 +104,9 @@ class Ocena_zaposlenog(models.Model):
         self.zbirna_ocena = round(zbirna, 2)
         return self.zbirna_ocena
 
-
     def save(self, *args, **kwargs):
         self.izracunaj_zbirnu_ocenu()
         super().save(*args, **kwargs)
 
-
     def __str__(self):
         return f"{self.zaposleni} - {self.rukovodilac} ({self.datum_Od} do {self.datum_Do}) - {self.zbirna_ocena}"
-
-

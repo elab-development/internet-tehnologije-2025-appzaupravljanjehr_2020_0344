@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'firma',
     'users',
     'ciljevi',
+    'ocenjivanje',
 ]
 
 MIDDLEWARE = [

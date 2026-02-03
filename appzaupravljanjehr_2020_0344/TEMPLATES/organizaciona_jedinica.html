@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_edit %}Izmeni{% else %}Nova{% endif %} organizaciona jedinica{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: calc(100vh - 100px);
+        padding: 40px 20px;
+        background: #E0F2FE;
+    }
+
+    .form-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 600px;
+        padding: 40px;
+    }
+
+    .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #CBD5E1;
+    }
+
+    .form-title {
+        font-weight: 700;
+        color: #1E40AF;
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .form-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-save, .btn-cancel {
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.2s;
+        font-size: 15px;
+    }
+
+    .btn-save {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-save:hover {
+        background: #218838;
+        transform: translateY(-2px);
+    }
+
+    .btn-cancel {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-cancel:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #1E293B;
+        margin-bottom: 8px;
+        font-size: 15px;
+    }
+
+    .form-group label.required::after {
+        content: " *";
+        color: #dc3545;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #CBD5E1;
+        border-radius: 8px;
+        font-size: 15px;
+        color: #334155;
+        background-color: #fff;
+        box-sizing: border-box;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #435e8d;
+        box-shadow: 0 0 0 3px rgba(67, 94, 141, 0.15);
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    select.form-control {
+        cursor: pointer;
+    }
+
+    .help-text {
+        font-size: 13px;
+        color: #64748b;
+        margin-top: 6px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-wrapper">
+    <div class="form-card">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-header">
+                <h1 class="form-title">
+                    {% if is_edit %}Izmeni organizacionu jedinicu{% else %}Nova organizaciona jedinica{% endif %}
+                </h1>
+                <div class="form-buttons">
+                    <button type="submit" class="btn-save">Sačuvaj</button>
+                    <a href="{% url 'users_list' %}" class="btn-cancel">Otkaži</a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="naziv" class="required">Naziv</label>
+                <input type="text" id="naziv" name="naziv" class="form-control"
+                       value="{{ jedinica.naziv|default:'' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="opis">Opis</label>
+                <textarea id="opis" name="opis" class="form-control">{{ jedinica.opis|default:'' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="nadredjena_org_jed">Nadređena organizaciona jedinica</label>
+                <select id="nadredjena_org_jed" name="nadredjena_org_jed" class="form-control">
+                    <option value="">— Nema nadređenu jedinicu —</option>
+                    {% for j in jedinice %}
+                    <option value="{{ j.id }}" {% if jedinica.nadredjena_org_jed.id == j.id %}selected{% endif %}>
+                        {{ j.naziv }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <div class="help-text">Ostavite prazno ako ovo nema nadređenu jedinicu (najviši nivo)</div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

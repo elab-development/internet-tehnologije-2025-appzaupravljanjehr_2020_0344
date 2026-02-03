@@ -8,6 +8,7 @@
         padding: 40px 20px;
         background: #E0F2FE;
         min-height: calc(100vh - 100px);
+
     }
 
     .users-container {
@@ -79,7 +80,7 @@
     /* Podešavanje centriranja za kolonu Akcije */
     .users-table th:nth-child(6) {
         text-align: center;
-        padding-right: 30px; /* Dodajemo više prostora sa desne strane */
+        padding-right: 30px;
     }
 
     .users-table td {
@@ -90,7 +91,6 @@
         vertical-align: middle;
     }
 
-    /* Podešavanje za ćeliju sa akcijama da bude desno poravnata */
     .users-table td:nth-child(6) {
         text-align: right;
         padding-right: 30px;
@@ -102,8 +102,8 @@
 
     .action-icons {
         display: flex;
-        justify-content: flex-end; /* GURA IKONE DESNO */
-        gap: 6px;                  /* MANJI RAZMAK */
+        justify-content: flex-end; 
+        gap: 6px;                  
         align-items: center;
     }
 
@@ -293,7 +293,7 @@
     }
 </style>
 
-<!-- Font Awesome za ikonice -->
+<!--Font Awesome za ikonice -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 
@@ -314,9 +314,9 @@
                     <th>Ime i prezime</th>
                     <th>JMBG</th>
                     <th>Email</th>
-                    <th>Organizaciona jedinica</th> <!-- NOVA KOLONA -->
+                    <th>Organizaciona jedinica</th>
                     <th>Radno mesto</th>
-                    <th>Akcije</th> <!-- CENTRIRANO IZNAD IKONICA -->
+                    <th>Akcije</th>
                 </tr>
             </thead>
             <tbody>
@@ -325,7 +325,7 @@
                     <td>{{ user.first_name }} {{ user.last_name }}</td>
                     <td>{{ user.jmbg }}</td>
                     <td>{{ user.email }}</td>
-                    <td>{{ user.organizaciona_jedinica.naziv|default:"—" }}</td> <!-- NOVI PODATAK -->
+                    <td>{{ user.organizaciona_jedinica.naziv|default:"—" }}</td>
                     <td>{{ user.radno_mesto.naziv|default:"—" }}</td>
                     <td>
                         <div class="action-icons">
@@ -341,7 +341,7 @@
                                 <span class="tooltip-text">Izmeni</span>
                             </a>
                             
-                            <!-- Delete icon -->
+                            <!-- Delete icon - izbacuje prozorcic za potvrdu-->
                             <button type="button" class="icon-btn tooltip delete-icon" title="Obriši"
                                     onclick="openDeleteModal('{% url 'delete_user' user.id %}', '{{ user.first_name }} {{ user.last_name }}')">
                                 <i class="fas fa-trash-alt"></i>
@@ -390,14 +390,12 @@
         document.getElementById('deleteModal').classList.remove('active');
     }
 
-    // Zatvori modal klikom na overlay (van modal box-a)
     document.getElementById('deleteModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeDeleteModal();
         }
     });
 
-    // Zatvori modal pritiskom na Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeDeleteModal();
