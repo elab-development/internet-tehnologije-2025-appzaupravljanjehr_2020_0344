@@ -4,6 +4,9 @@ from django.contrib import messages
 from users.models import Korisnik
 from firma.models import Organizaciona_jedinica, Radno_mesto
 from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from users.serializers import KorisnikSerializer
 
 
 def login_view(request):
@@ -225,3 +228,62 @@ def update_user(request, user_id):
         return redirect('users_list')
 
     return render(request, 'profile_edit.html', {'user': user, 'is_update_mode': True})
+
+
+def home_view(request):
+    broj_korisnika = Korisnik.objects.count()
+    return render(request, 'home.html', {'broj_korisnika': broj_korisnika})
+
+@api_view(['GET'])
+def api_korisnici(request):
+    korisnici = Korisnik.objects.all()
+    serializer = KorisnikSerializer(korisnici, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def api_korisnik_detalji(request, id):
+    korisnik = Korisnik.objects.get(id=id)
+    serializer = KorisnikSerializer(korisnik)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def api_korisnik_kreiraj(request):
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password = request.data.get('password')
+    first_name = request.data.get('first_name', '')
+    last_name = request.data.get('last_name', '')
+    jmbg = request.data.get('jmbg')
+
+    korisnik = Korisnik.objects.create_user(
+        username=username,
+        email=email,
+        password=password,
+        first_name=first_name,
+        last_name=last_name,
+        jmbg=jmbg,
+        srednje_ime='',
+        datum_rodjenja='2000-01-01',
+        adresa='',
+        strucna_sprema='',
+        broj_telefona='',
+    )
+    serializer = KorisnikSerializer(korisnik)
+    return Response(serializer.data) 
+
+@api_view(['DELETE'])
+def api_korisnik_obrisi(request, id):
+    korisnik = Korisnik.objects.get(id=id)
+    korisnik.delete()
+    return Response({'poruka': 'korisnik obrisan'})
+
+@api_view(['PUT'])
+def api_korisnik_update(request, id):
+    korisnik = Korisnik.objects.get(id=id)
+    korisnik.first_name = request.data.get('first_name', korisnik.first_name)
+    korisnik.last_name = request.data.get('last_name', korisnik.last_name)
+    korisnik.email = request.data.get('email', korisnik.email)
+    korisnik.broj_telefona = request.data.get('broj_telefona', korisnik.broj_telefona)
+    korisnik.save()
+    serializer = KorisnikSerializer(korisnik)
+    return Response(serializer.data)   

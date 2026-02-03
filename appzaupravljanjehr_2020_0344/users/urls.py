@@ -10,11 +10,17 @@ from users.views import (
     users_list,
     delete_user,
     profile_detail,
-    update_user
+    update_user,
+    home_view,
+    api_korisnici,
+    api_korisnik_detalji,
+    api_korisnik_kreiraj,
+    api_korisnik_obrisi,
+    api_korisnik_update,
 )
 
 urlpatterns = [
-    path('', lambda request: redirect('login'), name='home'),
+    path('', home_view, name='home'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('profile/', profile_view, name='profile'),
@@ -26,4 +32,10 @@ urlpatterns = [
     path('profile/edit/', profile_create, name='profile_edit'),
     path('user/update/<int:user_id>/', update_user, name='update_user'),
     path('user/delete/<int:user_id>/', delete_user, name='delete_user'),
+    # api rute
+    path('api/korisnici/', api_korisnici, name='api_korisnici'),
+    path('api/korisnici/<int:id>/', api_korisnik_detalji, name='api_korisnik_detalji'),
+    path('api/korisnici/kreiraj/', api_korisnik_kreiraj, name='api_korisnik_kreiraj'),
+    path('api/korisnici/obrisi/<int:id>/', api_korisnik_obrisi, name='api_korisnik_obrisi'),
+    path('api/korisnici/update/<int:id>/', api_korisnik_update, name='api_korisnik_update'),
 ]

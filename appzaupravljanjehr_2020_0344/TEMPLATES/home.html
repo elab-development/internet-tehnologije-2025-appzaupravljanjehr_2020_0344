@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Pocetna{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-top: 50px;">
+    <h1>Dobrodosli u HR aplikaciju</h1>
+    <p>Broj korisnika u sistemu: {{ broj_korisnika }}</p>
+    <br>
+    {% if user.is_authenticated %}
+    <a href="{% url 'profile' %}">Profile</a>
+    {% else %}
+    <a href="{% url 'login' %}">Prijavi se</a>
+    {% endif %}
+</div>
+{% endblock %}

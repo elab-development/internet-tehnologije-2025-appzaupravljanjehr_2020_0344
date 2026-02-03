@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users',
     'ciljevi',
     'ocenjivanje',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
