@@ -5,6 +5,25 @@ from django.contrib.auth.models import AbstractUser
 from firma.models import Organizaciona_jedinica, Radno_mesto
 
 class KorisnikManager(BaseUserManager):
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        if not username:
+            raise ValueError('Korisničko ime je obavezno')
+
+        email = self.normalize_email(email) if email else None
+        extra_fields.setdefault("role", "zaposleni")
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
+        extra_fields.setdefault("is_active", True)
+
+        user = self.model(
+            username=username,
+            email=email,
+            **extra_fields
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
     def create_superuser(self, username, email=None, password=None, **extra_fields):
         extra_fields.setdefault("role", "superuser")
         extra_fields.setdefault("is_staff", True)

@@ -155,7 +155,7 @@
 {% block content %}
 <div class="edit-wrapper">
     <div class="edit-card">
-        <form method="post" action="{% if is_create_mode %}{% url 'profile_save' %}{% else %}{% url 'update_profile' %}{% endif %}">
+        <form method="post" action="{% if is_create_mode %}{% url 'profile_save' %}{% elif is_update_mode %}{% url 'update_user' user.id %}{% else %}{% url 'update_profile' %}{% endif %}">
             {% csrf_token %}
             
             <div class="form-header">
@@ -168,9 +168,30 @@
                 </h1>
                 <div class="form-buttons">
                     <button type="submit" class="btn-save">Sačuvaj</button>
-                    <a href="{% url 'profile' %}" class="btn-cancel">Otkaži</a>
+                    <a href="{% if is_create_mode or is_update_mode %}{% url 'users_list' %}{% else %}{% url 'profile' %}{% endif %}" class="btn-cancel">Otkaži</a>
                 </div>
             </div>
+
+            {% if is_create_mode %}
+            <div class="section-title">Podaci za prijavu</div>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="username" class="field-required">Korisničko ime</label>
+                        <input type="text" id="username" name="username"
+                               class="form-input" required>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="password" class="field-required">Lozinka</label>
+                        <input type="password" id="password" name="password"
+                               class="form-input" required>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
 
             <div class="section-title">Lični podaci</div>
             
@@ -313,7 +334,63 @@
                 </div>
             </div>
 
-            {% if not is_create_mode %}
+            {% if is_create_mode %}
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="organizaciona_jedinica">Organizaciona jedinica</label>
+                        <select id="organizaciona_jedinica" name="organizaciona_jedinica" class="form-input">
+                            <option value="">Odaberite organizacionu jedinicu</option>
+                            {% for oj in organizacione_jedinice %}
+                            <option value="{{ oj.id }}">{{ oj.naziv }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="radno_mesto">Radno mesto</label>
+                        <select id="radno_mesto" name="radno_mesto" class="form-input">
+                            <option value="">Odaberite radno mesto</option>
+                            {% for rm in radna_mesta %}
+                            <option value="{{ rm.id }}">{{ rm.naziv }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="rukovodilac">Rukovodilac</label>
+                        <select id="rukovodilac" name="rukovodilac" class="form-input">
+                            <option value="">Odaberite rukovodioca</option>
+                            {% for r in rukovodioci %}
+                            <option value="{{ r.id }}">{{ r.get_full_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-item">
+                        <label for="role">Uloga</label>
+                        <select id="role" name="role" class="form-input">
+                            <option value="zaposleni">Zaposleni</option>
+                            <option value="rukovodilac">Rukovodilac</option>
+                            <option value="administrator">Administrator</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-item">
+                <label for="is_active">
+                    <input type="checkbox" id="is_active" name="is_active" checked>
+                    Aktivan korisnik
+                </label>
+            </div>
+            {% else %}
             <div class="form-item">
                 <label>Organizaciona jedinica</label>
                 <input type="text" value="{{ user.organizaciona_jedinica.naziv|default:'—' }}" 

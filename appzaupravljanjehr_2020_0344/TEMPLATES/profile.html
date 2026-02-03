@@ -71,9 +71,12 @@
 {% block content %}
 <div class="profile-wrapper">
     <div class="profile-card">
-
+        {% if user.id == request.user.id %}
         <a href="{% url 'update_profile' %}" class="edit-profile">Izmeni profil</a>
-
+        {% elif request.user.is_staff %}
+        <a href="{% url 'users_list' %}" class="edit-profile" style="right: 150px; background: #6c757d; border-color: #6c757d;">Nazad na listu</a>
+        <a href="{% url 'update_user' user.id %}" class="edit-profile">Izmeni profil</a>
+        {% endif %}
         
         <div class="section-title">Lični podaci</div>
         <div class="profile-item"><span>Ime:</span> {{ user.first_name }}</div>

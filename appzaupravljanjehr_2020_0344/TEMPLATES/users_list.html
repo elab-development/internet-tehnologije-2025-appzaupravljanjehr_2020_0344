@@ -1,0 +1,407 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista korisnika{% endblock %}
+
+{% block extra_css %}
+<style>
+    .users-wrapper {
+        padding: 40px 20px;
+        background: #E0F2FE;
+        min-height: calc(100vh - 100px);
+    }
+
+    .users-container {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px;
+    }
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #CBD5E1;
+    }
+
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1E40AF;
+        margin: 0;
+    }
+
+    .add-user-btn {
+        background: #435e8d;
+        color: #fff;
+        font-weight: 600;
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: background 0.2s, transform 0.2s;
+    }
+
+    .add-user-btn:hover {
+        background: #354b75;
+        transform: translateY(-2px);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .users-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .users-table thead {
+        background-color: #f1f5f9;
+    }
+
+    .users-table th {
+        padding: 16px 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #1E293B;
+        border-bottom: 2px solid #CBD5E1;
+        font-size: 16px;
+    }
+
+    /* Podešavanje centriranja za kolonu Akcije */
+    .users-table th:nth-child(6) {
+        text-align: center;
+        padding-right: 30px; /* Dodajemo više prostora sa desne strane */
+    }
+
+    .users-table td {
+        padding: 16px 12px;
+        border-bottom: 1px solid #e2e8f0;
+        color: #334155;
+        font-size: 15px;
+        vertical-align: middle;
+    }
+
+    /* Podešavanje za ćeliju sa akcijama da bude desno poravnata */
+    .users-table td:nth-child(6) {
+        text-align: right;
+        padding-right: 30px;
+    }
+
+    .users-table tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    .action-icons {
+        display: flex;
+        justify-content: flex-end; /* GURA IKONE DESNO */
+        gap: 6px;                  /* MANJI RAZMAK */
+        align-items: center;
+    }
+
+    .icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 6px;
+        border-radius: 6px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+    }
+
+    .icon-btn:hover {
+        background-color: #f1f5f9;
+        transform: scale(1.05);
+    }
+
+    .detail-icon {
+        color: #435e8d;
+    }
+
+    .detail-icon:hover {
+        color: #354b75;
+    }
+
+    .edit-icon {
+        color: #10b981;
+    }
+
+    .edit-icon:hover {
+        color: #059669;
+    }
+
+    .delete-icon {
+        color: #dc2626;
+    }
+
+    .delete-icon:hover {
+        color: #b91c1c;
+    }
+
+    .no-users {
+        text-align: center;
+        padding: 60px 20px;
+        color: #64748b;
+        font-size: 18px;
+    }
+
+    /* Tooltip styling */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip .tooltip-text {
+        visibility: hidden;
+        width: 80px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -40px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    .tooltip .tooltip-text::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #333 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-box {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .modal-icon {
+        font-size: 48px;
+        color: #dc2626;
+        margin-bottom: 15px;
+    }
+
+    .modal-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1E293B;
+        margin-bottom: 10px;
+    }
+
+    .modal-message {
+        font-size: 15px;
+        color: #64748b;
+        margin-bottom: 25px;
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .modal-btn {
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+    }
+
+    .modal-btn-cancel {
+        background: #e2e8f0;
+        color: #475569;
+    }
+
+    .modal-btn-cancel:hover {
+        background: #cbd5e1;
+    }
+
+    .modal-btn-delete {
+        background: #dc2626;
+        color: #ffffff;
+    }
+
+    .modal-btn-delete:hover {
+        background: #b91c1c;
+    }
+</style>
+
+<!-- Font Awesome za ikonice -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="users-wrapper">
+    <div class="users-container">
+        <div class="header-section">
+            <h1 class="page-title">Lista korisnika</h1>
+            <a href="{% url 'profile_edit' %}" class="add-user-btn">
+                <i class="fas fa-user-plus"></i> Dodaj korisnika
+            </a>
+        </div>
+
+        {% if users %}
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Ime i prezime</th>
+                    <th>JMBG</th>
+                    <th>Email</th>
+                    <th>Organizaciona jedinica</th> <!-- NOVA KOLONA -->
+                    <th>Radno mesto</th>
+                    <th>Akcije</th> <!-- CENTRIRANO IZNAD IKONICA -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                    <td>{{ user.jmbg }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.organizaciona_jedinica.naziv|default:"—" }}</td> <!-- NOVI PODATAK -->
+                    <td>{{ user.radno_mesto.naziv|default:"—" }}</td>
+                    <td>
+                        <div class="action-icons">
+                            <!-- Detail icon - vodi na profile.html -->
+                            <a href="{% url 'profile_detail' user.id %}" class="icon-btn tooltip detail-icon" title="Detalji">
+                                <i class="fas fa-eye"></i>
+                                <span class="tooltip-text">Detalji</span>
+                            </a>
+                            
+                            <!-- Edit icon - vodi na update stranicu -->
+                            <a href="{% url 'update_user' user.id %}" class="icon-btn tooltip edit-icon" title="Izmeni">
+                                <i class="fas fa-edit"></i>
+                                <span class="tooltip-text">Izmeni</span>
+                            </a>
+                            
+                            <!-- Delete icon -->
+                            <button type="button" class="icon-btn tooltip delete-icon" title="Obriši"
+                                    onclick="openDeleteModal('{% url 'delete_user' user.id %}', '{{ user.first_name }} {{ user.last_name }}')">
+                                <i class="fas fa-trash-alt"></i>
+                                <span class="tooltip-text">Obriši</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="no-users">
+            <p><i class="fas fa-users" style="font-size: 48px; margin-bottom: 15px;"></i></p>
+            <p>Trenutno nema registrovanih korisnika.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3 class="modal-title">Potvrda brisanja</h3>
+        <p class="modal-message">Da li ste sigurni da želite da obrišete korisnika <strong id="deleteUserName"></strong>?</p>
+        <div class="modal-buttons">
+            <button type="button" class="modal-btn modal-btn-cancel" onclick="closeDeleteModal()">Otkaži</button>
+            <a id="confirmDeleteBtn" href="#" class="modal-btn modal-btn-delete">Obriši</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function openDeleteModal(deleteUrl, userName) {
+        document.getElementById('deleteUserName').textContent = userName;
+        document.getElementById('confirmDeleteBtn').href = deleteUrl;
+        document.getElementById('deleteModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('active');
+    }
+
+    // Zatvori modal klikom na overlay (van modal box-a)
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
+
+    // Zatvori modal pritiskom na Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDeleteModal();
+        }
+    });
+</script>
+{% endblock %}
