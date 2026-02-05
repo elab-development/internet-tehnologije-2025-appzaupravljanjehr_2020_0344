@@ -1,0 +1,25 @@
+.home-wrapper {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.home-wrapper h1 {
+  color: #1E40AF;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.home-wrapper p {
+  color: #334155;
+  font-size: 18px;
+}
+
+.home-wrapper a {
+  color: #2563EB;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.home-wrapper a:hover {
+  text-decoration: underline;
+}

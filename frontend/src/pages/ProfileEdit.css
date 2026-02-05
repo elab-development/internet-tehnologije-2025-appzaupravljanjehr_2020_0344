@@ -1,0 +1,160 @@
+.edit-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 100px);
+  padding: 40px 20px;
+}
+
+.edit-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 1000px;
+  padding: 60px 50px;
+  font-size: 18px;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #CBD5E1;
+}
+
+.form-title {
+  font-weight: 700;
+  color: #1E40AF;
+  font-size: 24px;
+  margin: 0;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-save,
+.btn-cancel {
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  border: 2px solid;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+}
+
+.btn-save {
+  background: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.btn-save:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+.btn-cancel {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.btn-cancel:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}
+
+.section-title {
+  font-weight: 700;
+  color: #1E40AF;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 20px;
+  border-bottom: 1px solid #CBD5E1;
+  padding-bottom: 5px;
+}
+
+.section-title:first-of-type {
+  margin-top: 0;
+}
+
+.form-item {
+  margin-bottom: 20px;
+}
+
+.form-item label {
+  display: block;
+  font-weight: 600;
+  color: #1E293B;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #334155;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+.form-input:disabled {
+  background-color: #f8fafc;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #435e8d;
+  box-shadow: 0 0 0 2px rgba(67, 94, 141, 0.2);
+}
+
+select.form-input {
+  cursor: pointer;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-col {
+  flex: 1;
+}
+
+.help-text {
+  font-size: 14px;
+  color: #6c757d;
+  margin-top: 5px;
+}
+
+.field-required::after {
+  content: " *";
+  color: #dc3545;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .edit-card {
+    padding: 30px 20px;
+  }
+
+  .form-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

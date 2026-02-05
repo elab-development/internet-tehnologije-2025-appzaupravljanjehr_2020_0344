@@ -1,0 +1,160 @@
+.login-body {
+  min-height: 100vh;
+  background: #E8F0FE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-forma {
+  display: flex;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.login-sekcija {
+  flex: 1;
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-sekcija h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1E40AF;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.login-sekcija .podnaslov {
+  font-size: 14px;
+  color: #64748B;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.forma-grupa {
+  margin-bottom: 20px;
+}
+
+.forma-grupa label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.forma-grupa input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.forma-grupa input:focus {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.password-polje {
+  position: relative;
+}
+
+.password-polje input {
+  padding-right: 44px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #64748B;
+}
+
+.toggle-password:hover {
+  color: #334155;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: #2563EB;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-login:hover {
+  background: #1D4ED8;
+}
+
+.btn-login:active {
+  background: #1E40AF;
+}
+
+.slika-sekcija {
+  flex: 1;
+  min-height: 420px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #E0F2FE 0%, #BFDBFE 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slika-placeholder {
+  text-align: center;
+  padding: 40px;
+}
+
+.slika-placeholder h2 {
+  color: #1E40AF;
+  margin-top: 20px;
+  font-size: 24px;
+}
+
+.slika-placeholder p {
+  color: #64748B;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: #DC2626;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 700px) {
+  .login-forma {
+    flex-direction: column;
+  }
+
+  .slika-sekcija {
+    min-height: 200px;
+  }
+}
