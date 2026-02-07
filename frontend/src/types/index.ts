@@ -7,6 +7,8 @@ export interface Korisnik {
   role: 'superuser' | 'administrator' | 'rukovodilac' | 'zaposleni';
   jmbg: string;
   broj_telefona: string;
+  organizaciona_jedinica?: number;
+  radno_mesto?: number;
 }
 
 export interface KorisnikFull extends Korisnik {
@@ -66,4 +68,29 @@ export interface AuthUser {
   email: string;
   role: string;
   is_staff: boolean;
+}
+
+export interface TipCilja {
+  id: number;
+  naziv: string;
+}
+
+export interface Cilj {
+  id: number;
+  naziv: string;
+  tip_cilja: number;
+  tip_cilja_naziv?: string;
+  status: 'aktivan' | 'neaktivan';
+}
+
+export interface DodeljeniCilj {
+  id: number;
+  cilj: number;
+  cilj_naziv?: string;
+  tip_cilja_naziv?: string;
+  cilj_status?: 'aktivan' | 'neaktivan';
+  zaposleni: number;
+  zaposleni_ime?: string;
+  datum_Od: string;
+  datum_Do: string;
 }

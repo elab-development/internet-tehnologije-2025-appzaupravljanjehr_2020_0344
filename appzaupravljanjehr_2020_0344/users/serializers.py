@@ -5,7 +5,7 @@ from users.models import Korisnik
 class KorisnikSerializer(serializers.ModelSerializer):
     class Meta:
         model = Korisnik
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'role', 'jmbg', 'broj_telefona']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'role', 'jmbg', 'broj_telefona', 'organizaciona_jedinica', 'radno_mesto']
 
 
 class KorisnikFullSerializer(serializers.ModelSerializer):

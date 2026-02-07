@@ -1,17 +1,21 @@
-import { ReactNode } from 'react';
+import * as React from 'react';
 import './Layout.css';
 
 interface LayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
   isAuthenticated: boolean;
+  userRole?: string;
   onLogout: () => void;
   onNavigate: (page: string) => void;
 }
 
-export function Layout({ children, isAuthenticated, onLogout, onNavigate }: LayoutProps) {
+export function Layout({ children, isAuthenticated, userRole, onLogout, onNavigate }: LayoutProps) {
   if (!isAuthenticated) {
     return <>{children}</>;
   }
+
+  const upravljaCiljevima = userRole && ['superuser', 'administrator', 'rukovodilac'].includes(userRole);
+  const upravljaStruktorm = userRole && ['superuser', 'administrator'].includes(userRole);
 
   return (
     <div className="layout">
@@ -20,10 +24,19 @@ export function Layout({ children, isAuthenticated, onLogout, onNavigate }: Layo
           <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('home'); }}>HR aplikacija</a>
         </div>
         <div className="nav-links">
-          <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('profile'); }}>Ciljevi</a>
+          {upravljaCiljevima && (
+          <div className="dropdown">
+            <a href="#" onClick={(e) => e.preventDefault()} className="dropdown-toggle-link">Ciljevi</a>
+            <div className="dropdown-menu">
+              <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('novi-cilj'); }}>Novi cilj</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('dodela-ciljeva'); }}>Dodela ciljeva</a>
+            </div>
+          </div>
+          )}
           <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('profile'); }}>Ocenjivanje</a>
           <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('users'); }}>Korisnici</a>
 
+          {upravljaStruktorm && (
           <div className="dropdown">
             <button className="dropdown-toggle" title="Dodaj novo">
               <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 24 24" width="24px" height="24px">
@@ -37,6 +50,7 @@ export function Layout({ children, isAuthenticated, onLogout, onNavigate }: Layo
               <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('radno-mesto'); }}>Novo radno mesto</a>
             </div>
           </div>
+          )}
 
           <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('profile'); }} style={{ marginLeft: '1rem', display: 'flex', alignItems: 'center' }}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 24 24" width="24px" height="24px">

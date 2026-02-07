@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { korisniciApi } from '../api';
-import type { Korisnik } from '../types';
+import { korisniciApi, organizacioneJediniceApi, radnaMestaApi} from '../api';
+import type { Korisnik, OrganizacionaJedinica, RadnoMesto } from '../types';
 import './UsersList.css';
 
 interface UsersListProps {
@@ -11,6 +11,8 @@ interface UsersListProps {
 
 export function UsersList({ onAddUser, onViewUser, onEditUser }: UsersListProps) {
   const [users, setUsers] = useState<Korisnik[]>([]);
+  const [organizacioneJedinice, setOrganizacioneJedinice] = useState<OrganizacionaJedinica[]>([]);
+  const [radnaMesta, setRadnaMesta] = useState<RadnoMesto[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteModal, setDeleteModal] = useState<{ open: boolean; userId: number | null; userName: string }>({
     open: false,
@@ -18,21 +20,64 @@ export function UsersList({ onAddUser, onViewUser, onEditUser }: UsersListProps)
     userName: '',
   });
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterOrgJedinica, setFilterOrgJedinica] = useState('');
+  const [filterRadnoMesto, setFilterRadnoMesto] = useState('');
+  const [filteredRadnaMesta, setFilteredRadnaMesta] = useState<RadnoMesto[]>([]);
+
   useEffect(() => {
-    loadUsers();
+    loadData();
   }, []);
 
-  const loadUsers = async () => {
+  useEffect(() => {
+    if (filterOrgJedinica) {
+      const filtered = radnaMesta.filter(rm => rm.org_jed === Number(filterOrgJedinica));
+      setFilteredRadnaMesta(filtered);
+      setFilterRadnoMesto('');
+    } else {
+      setFilteredRadnaMesta(radnaMesta);
+    }
+  }, [filterOrgJedinica, radnaMesta]);
+
+  const loadData = async () => {
     try {
       setLoading(true);
-      const data = await korisniciApi.getAll();
-      setUsers(data);
+      const [usersData, orgData, rmData] = await Promise.all([
+        korisniciApi.getAll(),
+        organizacioneJediniceApi.getAll(),
+        radnaMestaApi.getAll(),
+      ]);
+      setUsers(usersData);
+      setOrganizacioneJedinice(orgData);
+      setRadnaMesta(rmData);
+      setFilteredRadnaMesta(rmData);
     } catch (err) {
       console.error('Greška pri učitavanju korisnika:', err);
     } finally {
       setLoading(false);
     }
   };
+
+  const getFilteredUsers = () => {
+    return users.filter(user => {
+      const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
+      const matchesSearch = searchTerm === '' ||
+        fullName.includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.jmbg.includes(searchTerm);
+
+      const matchesOrgJedinica = filterOrgJedinica === '' ||
+
+        user.organizaciona_jedinica === Number(filterOrgJedinica);
+
+      const matchesRadnoMesto = filterRadnoMesto === '' ||
+        user.radno_mesto === Number(filterRadnoMesto);
+
+      return matchesSearch && matchesOrgJedinica && matchesRadnoMesto;
+    });
+  };
+
+  const filteredUsers = getFilteredUsers();
 
   const openDeleteModal = (userId: number, userName: string) => {
     setDeleteModal({ open: true, userId, userName });
@@ -68,7 +113,55 @@ export function UsersList({ onAddUser, onViewUser, onEditUser }: UsersListProps)
           </button>
         </div>
 
-        {users.length > 0 ? (
+        <div className="filters-section">
+          <div className="filter-group">
+            <input
+              type="text"
+              className="filter-input"
+              placeholder="Pretrazi po imenu, emailu ili JMBG..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="filter-group">
+            <select
+              className="filter-select"
+              value={filterOrgJedinica}
+              onChange={(e) => setFilterOrgJedinica(e.target.value)}
+            >
+              <option value="">Sve org. jedinice</option>
+              {organizacioneJedinice.map(oj => (
+                <option key={oj.id} value={oj.id}>{oj.naziv}</option>
+              ))}
+            </select>
+          </div>
+          <div className="filter-group">
+            <select
+              className="filter-select"
+              value={filterRadnoMesto}
+              onChange={(e) => setFilterRadnoMesto(e.target.value)}
+            >
+              <option value="">Sva radna mesta</option>
+              {filteredRadnaMesta.map(rm => (
+                <option key={rm.id} value={rm.id}>{rm.naziv}</option>
+              ))}
+            </select>
+          </div>
+          {(searchTerm || filterOrgJedinica || filterRadnoMesto) && (
+            <button
+              className="clear-filters-btn"
+              onClick={() => {
+                setSearchTerm('');
+                setFilterOrgJedinica('');
+                setFilterRadnoMesto('');
+              }}
+            >
+              Ocisti filtere
+            </button>
+          )}
+        </div>
+
+        {filteredUsers.length > 0 ? (
           <table className="users-table">
             <thead>
               <tr>
@@ -81,7 +174,7 @@ export function UsersList({ onAddUser, onViewUser, onEditUser }: UsersListProps)
               </tr>
             </thead>
             <tbody>
-              {users.map(user => (
+              {filteredUsers.map(user => (
                 <tr key={user.id}>
                   <td>{user.first_name} {user.last_name}</td>
                   <td>{user.jmbg}</td>
@@ -128,7 +221,7 @@ export function UsersList({ onAddUser, onViewUser, onEditUser }: UsersListProps)
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#64748b" width="48" height="48">
               <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
             </svg>
-            <p>Trenutno nema registrovanih korisnika.</p>
+            <p>{users.length === 0 ? 'Trenutno nema registrovanih korisnika.' : 'Nema korisnika koji odgovaraju filterima.'}</p>
           </div>
         )}
       </div>

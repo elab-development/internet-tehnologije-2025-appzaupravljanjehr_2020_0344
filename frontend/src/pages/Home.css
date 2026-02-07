@@ -1,25 +1,142 @@
 .home-wrapper {
-  text-align: center;
-  margin-top: 50px;
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .home-wrapper h1 {
   color: #1E40AF;
-  font-size: 32px;
+  font-size: 28px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.role-badge {
+  padding: 6px 20px;
+  border-radius: 20px;
+  background: #E0E7FF;
+  color: #3730A3;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: inline-block;
+  margin-bottom: 30px;
+}
+
+.role-badge.superuser {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.superuser-message {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.superuser-message p {
+  color: #64748B;
+  font-size: 16px;
   margin-bottom: 20px;
 }
 
-.home-wrapper p {
-  color: #334155;
-  font-size: 18px;
+.quick-links {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.home-wrapper a {
-  color: #2563EB;
+.quick-links button {
+  padding: 12px 24px;
+  background: #3B82F6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 600;
-  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.home-wrapper a:hover {
-  text-decoration: underline;
+.quick-links button:hover {
+  background: #2563EB;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #E2E8F0;
+}
+
+.dashboard-card h3 {
+  color: #1E293B;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.no-data {
+  color: #94A3B8;
+  text-align: center;
+  padding: 30px 0;
+  font-style: italic;
+}
+
+.goals-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.goals-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.goals-list li:last-child {
+  border-bottom: none;
+}
+
+.goal-name {
+  flex: 1;
+  font-weight: 500;
+  color: #1E293B;
+}
+
+.goal-type {
+  font-size: 12px;
+  padding: 4px 8px;
+  background: #E0E7FF;
+  color: #3730A3;
+  border-radius: 4px;
+}
+
+.goal-date {
+  font-size: 12px;
+  color: #64748B;
+}
+
+.goals-list.history .goal-name {
+  color: #64748B;
 }

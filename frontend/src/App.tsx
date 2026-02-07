@@ -7,11 +7,13 @@ import { ProfileEdit } from './pages/ProfileEdit';
 import { UsersList } from './pages/UsersList';
 import { OrganizacionaJedinica } from './pages/OrganizacionaJedinica';
 import { RadnoMesto } from './pages/RadnoMesto';
+import { NoviCilj } from './pages/NoviCilj';
+import { DodelaCiljeva } from './pages/DodelaCiljeva';
 import { authApi, korisniciApi } from './api';
 import type { KorisnikFull, OrganizacionaJedinica as OrgJedinicaType, RadnoMesto as RadnoMestoType } from './types';
 import './App.css';
 
-type Page = 'login' | 'home' | 'profile' | 'profile-edit' | 'profile-create' | 'users' | 'user-detail' | 'user-edit' | 'organizaciona-jedinica' | 'radno-mesto';
+type Page = 'login' | 'home' | 'profile' | 'profile-edit' | 'profile-create' | 'users' | 'user-detail' | 'user-edit' | 'organizaciona-jedinica' | 'radno-mesto' | 'novi-cilj' | 'dodela-ciljeva';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -79,6 +81,20 @@ function App() {
   };
 
   const handleNavigate = (page: string) => {
+    const userRole = currentUser?.role;
+    const upravljaCiljevima = userRole && ['superuser', 'administrator', 'rukovodilac'].includes(userRole);
+    const upravljaStrukturom = userRole && ['superuser', 'administrator'].includes(userRole);
+
+    if ((page === 'novi-cilj' || page === 'dodela-ciljeva') && !upravljaCiljevima) {
+      setCurrentPage('home');
+      return;
+    }
+
+    if ((page === 'organizaciona-jedinica' || page === 'radno-mesto' || page === 'profile-create') && !upravljaStrukturom) {
+      setCurrentPage('home');
+      return;
+    }
+
     setCurrentPage(page as Page);
     if (page !== 'user-detail' && page !== 'user-edit') {
       setSelectedUserId(null);
@@ -115,23 +131,14 @@ function App() {
     }
   };
 
-  const handleSaveOrgJedinica = (data: any) => {
-    console.log('Saving org jedinica:', data);
-    setCurrentPage('users');
-  };
-
-  const handleSaveRadnoMesto = (data: any) => {
-    console.log('Saving radno mesto:', data);
-    setCurrentPage('users');
-  };
-
+  
   const renderPage = () => {
     switch (currentPage) {
       case 'login':
         return <Login onLogin={handleLogin} error={loginError} />;
 
       case 'home':
-        return <Home onNavigate={handleNavigate} />;
+        return <Home onNavigate={handleNavigate} currentUser={currentUser} />;
 
       case 'profile':
         return currentUser ? (
@@ -210,8 +217,7 @@ function App() {
       case 'organizaciona-jedinica':
         return (
           <OrganizacionaJedinica
-            jedinice={organizacioneJedinice}
-            onSave={handleSaveOrgJedinica}
+            onSave={() => setCurrentPage('users')}
             onCancel={() => setCurrentPage('users')}
           />
         );
@@ -219,11 +225,26 @@ function App() {
       case 'radno-mesto':
         return (
           <RadnoMesto
-            jedinice={organizacioneJedinice}
-            onSave={handleSaveRadnoMesto}
+            onSave={() => setCurrentPage('users')}
             onCancel={() => setCurrentPage('users')}
           />
         );
+
+      case 'novi-cilj':
+        return (
+          <NoviCilj
+            onSave={() => setCurrentPage('home')}
+            onCancel={() => setCurrentPage('home')}
+          />
+        );
+  
+      case 'dodela-ciljeva':
+        return (
+          <DodelaCiljeva
+            onSave={() => setCurrentPage('home')}
+            onCancel={() => setCurrentPage('home')}
+          />
+        );  
 
       default:
         return <Home onNavigate={handleNavigate} />;
@@ -233,6 +254,7 @@ function App() {
   return (
     <Layout
       isAuthenticated={isAuthenticated}
+      userRole={currentUser?.role}
       onLogout={handleLogout}
       onNavigate={handleNavigate}
     >

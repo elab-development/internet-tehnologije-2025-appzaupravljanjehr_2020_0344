@@ -1,45 +1,72 @@
 import { useState, useEffect } from 'react';
+import { organizacioneJediniceApi } from '../api';
 import type { OrganizacionaJedinica as OrgJedinicaType } from '../types';
 import './FormPage.css';
 
 interface OrganizacionaJedinicaProps {
-  jedinica?: OrgJedinicaType | null;
-  jedinice: OrgJedinicaType[];
-  isEdit?: boolean;
-  onSave: (data: any) => void;
+  onSave: () => void;
   onCancel: () => void;
 }
 
 export function OrganizacionaJedinica({
-  jedinica,
-  jedinice,
-  isEdit,
   onSave,
   onCancel,
 }: OrganizacionaJedinicaProps) {
+  const [jedinice, setJedinice] = useState<OrgJedinicaType[]>([])
   const [formData, setFormData] = useState({
-    naziv: jedinica?.naziv || '',
-    opis: jedinica?.opis || '',
-    nadredjena_org_jed: jedinica?.nadredjena_org_jed || '',
+    naziv: '',
+    opis: '',
+    nadredjena_org_jed: '',
   });
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (jedinica) {
-      setFormData({
-        naziv: jedinica.naziv || '',
-        opis: jedinica.opis || '',
-        nadredjena_org_jed: jedinica.nadredjena_org_jed || '',
-      });
+    loadJedinice();
+  }, []);
+
+  const loadJedinice = async () => {
+    try {
+      const data = await organizacioneJediniceApi.getAll();
+      setJedinice(data);
+    } catch (err) {
+      console.error('Greska pri ucitavanju organizacionih jedinica:', err);
     }
-  }, [jedinica]);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    setError(null);
+
+    if (!formData.naziv.trim()) {
+      setError('Naziv je obavezan.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const payload: any = {
+        naziv: formData.naziv.trim(),
+        opis: formData.opis,
+      };
+
+      if (formData.nadredjena_org_jed) {
+        payload.nadredjena_org_jed = Number(formData.nadredjena_org_jed);
+      }
+
+      await organizacioneJediniceApi.create(payload);
+      onSave();
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Greska pri kreiranju organizacione jedinice.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,14 +74,21 @@ export function OrganizacionaJedinica({
       <div className="form-card">
         <form onSubmit={handleSubmit}>
           <div className="form-header">
-            <h1 className="form-title">
-              {isEdit ? 'Izmeni organizacionu jedinicu' : 'Nova organizaciona jedinica'}
-            </h1>
+            <h1 className="form-title">Nova organizaciona jedinica</h1>
+              
             <div className="form-buttons">
-              <button type="submit" className="btn-save">Sačuvaj</button>
+              <button type="submit" className="btn-save" disabled={loading}>
+                {loading ? 'Cuvanje...' : 'Sacuvaj'}
+              </button>
               <button type="button" onClick={onCancel} className="btn-cancel">Otkaži</button>
             </div>
           </div>
+
+          {error && (
+            <div className="no-units-warning" style={{ background: '#fee2e2', borderColor: '#fca5a5', color: '#dc2626' }}>
+              {error}
+            </div>
+          )}
 
           <div className="form-group">
             <label htmlFor="naziv" className="required">Naziv</label>
@@ -90,7 +124,7 @@ export function OrganizacionaJedinica({
               onChange={handleChange}
             >
               <option value="">— Nema nadređenu jedinicu —</option>
-              {jedinice.filter(j => j.id !== jedinica?.id).map(j => (
+              {jedinice.map(j => (
                 <option key={j.id} value={j.id}>{j.naziv}</option>
               ))}
             </select>

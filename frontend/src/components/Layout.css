@@ -50,6 +50,14 @@
   opacity: 0.8;
 }
 
+.dropdown-toggle-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
 .dropdown-menu {
   display: none;
   position: absolute;
@@ -90,7 +98,6 @@
   margin: 0;
 }
 
-/* Alert messages */
 .messages-container {
   max-width: 600px;
   margin: 0 auto 20px auto;
