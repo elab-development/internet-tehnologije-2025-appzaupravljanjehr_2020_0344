@@ -18,7 +18,6 @@ export function DodelaCiljeva({ onSave, onCancel }: DodelaCiljevaProps) {
   const [filteredKorisnici, setFilteredKorisnici] = useState<Korisnik[]>([]);
 
   const [formData, setFormData] = useState({
-    cilj: '',
     organizaciona_jedinica: '',
     radno_mesto: '',
     datum_Od: '',
@@ -126,10 +125,10 @@ export function DodelaCiljeva({ onSave, onCancel }: DodelaCiljevaProps) {
     setError(null);
     setSuccess(null);
 
-    if (!formData.cilj) {
-      setError('Izaberite cilj.');
+    if (selectedCiljevi.length === 0) {
+      setError('Izaberite barem jedan cilj.');
       return;
-    }
+    }	
 
     if (!formData.datum_Od || !formData.datum_Do) {
       setError('Unesite datume.');

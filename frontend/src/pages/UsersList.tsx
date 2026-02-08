@@ -35,13 +35,23 @@ export function UsersList({ onAddUser, onViewUser, onEditUser, currentUserRole }
 
   useEffect(() => {
     if (filterOrgJedinica) {
-      const filtered = radnaMesta.filter(rm => rm.org_jed === Number(filterOrgJedinica));
+      const sviIdovi = getOrgJedinicaSaPodjedinicama(Number(filterOrgJedinica), organizacioneJedinice);
+      const filtered = radnaMesta.filter(rm => sviIdovi.includes(rm.org_jed));
       setFilteredRadnaMesta(filtered);
       setFilterRadnoMesto('');
     } else {
       setFilteredRadnaMesta(radnaMesta);
     }
-  }, [filterOrgJedinica, radnaMesta]);
+  }, [filterOrgJedinica, radnaMesta, organizacioneJedinice]);
+
+  const getOrgJedinicaSaPodjedinicama = (id: number, jedinice: OrganizacionaJedinica[]): number[] => {
+    const ids = [id];
+    const children = jedinice.filter(j => j.nadredjena_org_jed === id);
+    for (const child of children) {
+      ids.push(...getOrgJedinicaSaPodjedinicama(child.id, jedinice));
+    }
+    return ids;
+  };
 
   const loadData = async () => {
     try {
@@ -63,6 +73,10 @@ export function UsersList({ onAddUser, onViewUser, onEditUser, currentUserRole }
   };
 
   const getFilteredUsers = () => {
+    const orgIdovi = filterOrgJedinica
+      ? getOrgJedinicaSaPodjedinicama(Number(filterOrgJedinica), organizacioneJedinice)
+      : [];
+
     return users.filter(user => {
       const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
       const matchesSearch = searchTerm === '' ||
@@ -71,8 +85,7 @@ export function UsersList({ onAddUser, onViewUser, onEditUser, currentUserRole }
         user.jmbg.includes(searchTerm);
 
       const matchesOrgJedinica = filterOrgJedinica === '' ||
-
-        user.organizaciona_jedinica === Number(filterOrgJedinica);
+        (user.organizaciona_jedinica != null && orgIdovi.includes(user.organizaciona_jedinica));
 
       const matchesRadnoMesto = filterRadnoMesto === '' ||
         user.radno_mesto === Number(filterRadnoMesto);
@@ -112,9 +125,11 @@ export function UsersList({ onAddUser, onViewUser, onEditUser, currentUserRole }
       <div className="users-container">
         <div className="header-section">
           <h1 className="page-title">Lista korisnika</h1>
+          {canCreateUser && (
           <Button variant="primary" onClick={onAddUser} className="add-user-btn">
             <i className="fas fa-user-plus"></i> Dodaj korisnika
           </Button>
+          )}
         </div>
 
         <div className="filters-section">

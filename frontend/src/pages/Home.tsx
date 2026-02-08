@@ -25,8 +25,8 @@ export function Home({ onNavigate, currentUser }: HomeProps) {
   const loadDodeljeniCiljevi = async () => {
     try {
       const data = await dodeljeniCiljeviApi.getAll();
-      console.log('Dodeljeni ciljevi iz API:', data);
-      setDodeljeniCiljevi(data);
+      const mojiCiljevi = data.filter((dc: DodeljeniCilj) => dc.zaposleni === currentUser?.id);
+      setDodeljeniCiljevi(mojiCiljevi);
     } catch (err) {
       console.error('Greška pri učitavanju ciljeva:', err);
     } finally {

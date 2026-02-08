@@ -62,9 +62,12 @@ def api_korisnici(request):
     if Korisnik.objects.filter(jmbg=jmbg).exists():
         return Response({'error': 'JMBG već postoji.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    org_jed = Organizaciona_jedinica.objects.filter(id=data.get('organizaciona_jedinica')).first()
-    radno_mesto = Radno_mesto.objects.filter(id=data.get('radno_mesto')).first()
-    rukovodilac = Korisnik.objects.filter(id=data.get('rukovodilac')).first()
+    org_jed_id = data.get('organizaciona_jedinica')
+    org_jed = Organizaciona_jedinica.objects.filter(id=org_jed_id).first() if org_jed_id else None
+    radno_mesto_id = data.get('radno_mesto')
+    radno_mesto = Radno_mesto.objects.filter(id=radno_mesto_id).first() if radno_mesto_id else None
+    rukovodilac_id = data.get('rukovodilac')
+    rukovodilac = Korisnik.objects.filter(id=rukovodilac_id).first() if rukovodilac_id else None
 
     korisnik = Korisnik.objects.create_user(
         username=username,
@@ -136,14 +139,14 @@ def api_korisnik(request, id):
         if 'role' in data:
             korisnik.role = data.get('role')
         if 'organizaciona_jedinica' in data:
-            org_jed = Organizaciona_jedinica.objects.filter(id=data.get('organizaciona_jedinica')).first()
-            korisnik.organizaciona_jedinica = org_jed
+            org_jed_id = data.get('organizaciona_jedinica')
+            korisnik.organizaciona_jedinica = Organizaciona_jedinica.objects.filter(id=org_jed_id).first() if org_jed_id else None
         if 'radno_mesto' in data:
-            radno_mesto = Radno_mesto.objects.filter(id=data.get('radno_mesto')).first()
-            korisnik.radno_mesto = radno_mesto
+            rm_id = data.get('radno_mesto')
+            korisnik.radno_mesto = Radno_mesto.objects.filter(id=rm_id).first() if rm_id else None
         if 'rukovodilac' in data:
-            rukovodilac = Korisnik.objects.filter(id=data.get('rukovodilac')).first()
-            korisnik.rukovodilac = rukovodilac
+            ruk_id = data.get('rukovodilac')
+            korisnik.rukovodilac = Korisnik.objects.filter(id=ruk_id).first() if ruk_id else None
 
     korisnik.save()
 

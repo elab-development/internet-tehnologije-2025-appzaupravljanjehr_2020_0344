@@ -9,7 +9,7 @@ import { OrganizacionaJedinica } from './pages/OrganizacionaJedinica';
 import { RadnoMesto } from './pages/RadnoMesto';
 import { NoviCilj } from './pages/NoviCilj';
 import { DodelaCiljeva } from './pages/DodelaCiljeva';
-import { authApi, korisniciApi } from './api';
+import { authApi, korisniciApi, organizacioneJediniceApi, radnaMestaApi } from './api';
 import type { KorisnikFull, OrganizacionaJedinica as OrgJedinicaType, RadnoMesto as RadnoMestoType } from './types';
 import './App.css';
 
@@ -23,9 +23,9 @@ function App() {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [selectedUser, setSelectedUser] = useState<KorisnikFull | null>(null);
 
-  const [organizacioneJedinice] = useState<OrgJedinicaType[]>([]);
-  const [radnaMesta] = useState<RadnoMestoType[]>([]);
-  const [rukovodioci] = useState<KorisnikFull[]>([]);
+  const [organizacioneJedinice, setOrganizacioneJedinice] = useState<OrgJedinicaType[]>([]);
+  const [radnaMesta, setRadnaMesta] = useState<RadnoMestoType[]>([]);
+  const [rukovodioci, setRukovodioci] = useState<KorisnikFull[]>([]);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('currentUser');
@@ -35,6 +35,27 @@ function App() {
       setCurrentPage('home');
     }
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadDropdownData();
+    }
+  }, [isAuthenticated]);
+
+  const loadDropdownData = async () => {
+    try {
+      const [orgJedinice, radnaMestaData, korisnici] = await Promise.all([
+        organizacioneJediniceApi.getAll(),
+        radnaMestaApi.getAll(),
+        korisniciApi.getAll(),
+      ]);
+      setOrganizacioneJedinice(orgJedinice);
+      setRadnaMesta(radnaMestaData);
+      setRukovodioci(korisnici.filter((k: any) => k.role === 'rukovodilac' || k.role === 'administrator'));
+    } catch (err) {
+      console.error('Greška pri učitavanju podataka za forme:', err);
+    }
+  };
 
   useEffect(() => {
     if (selectedUserId && (currentPage === 'user-detail' || currentPage === 'user-edit')) {
@@ -116,9 +137,11 @@ function App() {
     try {
       if (currentPage === 'profile-create') {
         await korisniciApi.create(data);
+        await loadDropdownData();
         setCurrentPage('users');
       } else if (currentPage === 'user-edit' && selectedUserId) {
         await korisniciApi.update(selectedUserId, data);
+        await loadDropdownData();
         setCurrentPage('users');
       } else if (currentPage === 'profile-edit' && currentUser) {
         const updatedUser = await korisniciApi.update(currentUser.id, data);
@@ -126,7 +149,9 @@ function App() {
         localStorage.setItem('currentUser', JSON.stringify(updatedUser));
         setCurrentPage('profile');
       }
-    } catch (err) {
+    } catch (err : any) {
+      const message = err?.response?.data?.error || 'Greška pri čuvanju podataka.';
+      alert(message);
       console.error('Greška pri čuvanju:', err);
     }
   };
@@ -168,6 +193,7 @@ function App() {
         return (
           <ProfileEdit
             user={null}
+            currentUser={currentUser}
             isCreateMode={true}
             organizacioneJedinice={organizacioneJedinice}
             radnaMesta={radnaMesta}
