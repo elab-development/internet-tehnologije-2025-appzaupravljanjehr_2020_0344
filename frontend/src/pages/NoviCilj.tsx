@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { tipoviCiljevaApi, ciljeviApi } from '../api';
 import type { TipCilja } from '../types';
+import { Button } from '../components/Button';
 import './FormPage.css';
 
 interface NoviCiljProps {
@@ -93,12 +94,12 @@ export function NoviCilj({ onSave, onCancel }: NoviCiljProps) {
           <div className="form-header">
             <h1 className="form-title">Novi cilj</h1>
             <div className="form-buttons">
-              <button type="submit" className="btn-save" disabled={loading}>
+              <Button type="submit" variant="save" disabled={loading}>
                 {loading ? 'Cuvanje...' : 'Sacuvaj'}
-              </button>
-              <button type="button" onClick={onCancel} className="btn-cancel">
+              </Button>
+              <Button variant="cancel" onClick={onCancel}>
                 Otkazi
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -139,14 +140,13 @@ export function NoviCilj({ onSave, onCancel }: NoviCiljProps) {
                   <option key={tip.id} value={tip.id}>{tip.naziv}</option>
                 ))}
               </select>
-              <button
-                type="button"
+              <Button
+                variant="save"
                 onClick={() => setShowNoviTip(!showNoviTip)}
-                className="btn-save"
                 style={{ padding: '12px 16px', whiteSpace: 'nowrap' }}
               >
                 + Novi tip
-              </button>
+              </Button>
             </div>
             {showNoviTip && (
               <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
@@ -158,14 +158,13 @@ export function NoviCilj({ onSave, onCancel }: NoviCiljProps) {
                   placeholder="Naziv novog tipa cilja"
                   style={{ flex: 1 }}
                 />
-                <button
-                  type="button"
+                <Button
+                  variant="save"
                   onClick={handleDodajTipCilja}
-                  className="btn-save"
                   style={{ padding: '12px 16px' }}
                 >
                   Dodaj
-                </button>
+                </Button>
               </div>
             )}
             <div className="help-text">Izaberite postojeci tip ili kreirajte novi</div>

@@ -37,40 +37,6 @@
   gap: 10px;
 }
 
-.btn-save,
-.btn-cancel {
-  padding: 8px 20px;
-  border-radius: 6px;
-  font-weight: 600;
-  border: 2px solid;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-  transition: all 0.2s;
-}
-
-.btn-save {
-  background: #28a745;
-  color: white;
-  border-color: #28a745;
-}
-
-.btn-save:hover {
-  background: #218838;
-  transform: translateY(-2px);
-}
-
-.btn-cancel {
-  background: #dc3545;
-  color: white;
-  border-color: #dc3545;
-}
-
-.btn-cancel:hover {
-  background: #c82333;
-  transform: translateY(-2px);
-}
-
 .section-title {
   font-weight: 700;
   color: #1E40AF;

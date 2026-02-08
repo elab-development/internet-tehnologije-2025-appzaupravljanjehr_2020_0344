@@ -36,44 +36,6 @@
   gap: 10px;
 }
 
-.btn-save,
-.btn-cancel {
-  padding: 10px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-  transition: all 0.2s;
-  font-size: 15px;
-}
-
-.btn-save {
-  background: #28a745;
-  color: white;
-}
-
-.btn-save:hover:not(:disabled) {
-  background: #218838;
-  transform: translateY(-2px);
-}
-
-.btn-save:disabled {
-  background: #94a3b8;
-  cursor: not-allowed;
-}
-
-.btn-cancel {
-  background: #6c757d;
-  color: white;
-}
-
-.btn-cancel:hover {
-  background: #5a6268;
-  transform: translateY(-2px);
-}
-
 .form-group {
   margin-bottom: 24px;
 }

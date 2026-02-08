@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ciljeviApi, korisniciApi, dodeljeniCiljeviApi, organizacioneJediniceApi, radnaMestaApi } from '../api';
 import type { Cilj, Korisnik, OrganizacionaJedinica, RadnoMesto } from '../types';
+import { Button } from '../components/Button';
 import './FormPage.css';
 
 interface DodelaCiljevaProps {
@@ -200,12 +201,12 @@ export function DodelaCiljeva({ onSave, onCancel }: DodelaCiljevaProps) {
           <div className="form-header">
             <h1 className="form-title">Dodela ciljeva</h1>
             <div className="form-buttons">
-              <button type="submit" className="btn-save" disabled={loading}>
+              <Button type="submit" variant="save" disabled={loading}>
                 {loading ? 'Dodeljujem...' : 'Dodeli'}
-              </button>
-              <button type="button" onClick={onCancel} className="btn-cancel">
+              </Button>
+              <Button variant="cancel" onClick={onCancel}>
                 Otkazi
-              </button>
+              </Button>
             </div>
           </div>
 

@@ -1,4 +1,5 @@
 import type { KorisnikFull } from '../types';
+import { Button } from '../components/Button';
 import './Profile.css';
 
 interface ProfileProps {
@@ -22,13 +23,13 @@ export function Profile({ user, currentUserId, isStaff, onEdit, onBack }: Profil
     <div className="profile-wrapper">
       <div className="profile-card">
         {isOwnProfile ? (
-          <button onClick={onEdit} className="edit-profile">Izmeni profil</button>
+          <Button onClick={onEdit} variant="primary" className="edit-profile">Izmeni profil</Button>
         ) : isStaff ? (
           <>
             {onBack && (
-              <button onClick={onBack} className="edit-profile back-btn">Nazad na listu</button>
+              <Button onClick={onBack} variant="cancel" className="edit-profile back-btn">Nazad na listu</Button>
             )}
-            <button onClick={onEdit} className="edit-profile">Izmeni profil</button>
+            <Button onClick={onEdit} variant="primary" className="edit-profile">Izmeni profil</Button>
           </>
         ) : null}
 

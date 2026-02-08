@@ -1,0 +1,85 @@
+.btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-size: 15px;
+}
+  
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+  
+.btn-primary {
+    background: #435e8d;
+    color: #fff;
+}
+  
+.btn-primary:hover:not(:disabled) {
+    background: #354b75;
+    transform: translateY(-2px);
+}
+  
+.btn-save {
+    background: #28a745;
+    color: white;
+}
+  
+.btn-save:hover:not(:disabled) {
+    background: #218838;
+    transform: translateY(-2px);
+}
+  
+.btn-cancel {
+    background: #6c757d;
+    color: white;
+}
+  
+.btn-cancel:hover:not(:disabled) {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+  
+.btn-danger {
+    background: #dc2626;
+    color: #ffffff;
+}
+  
+.btn-danger:hover:not(:disabled) {
+    background: #b91c1c;
+    transform: translateY(-2px);
+}
+  
+.btn-outline {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+}
+  
+.btn-outline:hover:not(:disabled) {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+}
+  
+.btn-icon {
+    background: none;
+    border: none;
+    padding: 6px;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+}
+  
+.btn-icon:hover:not(:disabled) {
+    background-color: #f1f5f9;
+    transform: scale(1.05);
+}
+  

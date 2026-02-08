@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import type { KorisnikFull, OrganizacionaJedinica, RadnoMesto } from '../types';
+import { Button } from '../components/Button';
 import './ProfileEdit.css';
 
 interface ProfileEditProps {
   user?: KorisnikFull | null;
+  currentUser?: KorisnikFull | null;
   isCreateMode: boolean;
   isUpdateMode?: boolean;
   organizacioneJedinice: OrganizacionaJedinica[];
@@ -15,6 +17,7 @@ interface ProfileEditProps {
 
 export function ProfileEdit({
   user,
+  currentUser,
   isCreateMode,
   isUpdateMode,
   organizacioneJedinice,
@@ -23,6 +26,14 @@ export function ProfileEdit({
   onSave,
   onCancel,
 }: ProfileEditProps) {
+  const isEditingSelf = !!(currentUser && user && currentUser.id === user.id);
+  const isSuperuser = currentUser?.role === 'superuser';
+
+  const canEditOrgJedinica = isCreateMode || (isUpdateMode && !isEditingSelf);
+  const canEditRadnoMesto = isCreateMode || (isUpdateMode && !isEditingSelf);
+  const canEditRukovodilac = isCreateMode || (isUpdateMode && !isEditingSelf);
+  const canEditRole = isCreateMode || (isUpdateMode && !isEditingSelf) || (isEditingSelf && isSuperuser);
+  const canEditIsActive = isCreateMode || (isUpdateMode && !isEditingSelf);
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -94,8 +105,8 @@ export function ProfileEdit({
               {isCreateMode ? 'Kreiraj profil' : 'Izmeni profil'}
             </h1>
             <div className="form-buttons">
-              <button type="submit" className="btn-save">Sačuvaj</button>
-              <button type="button" onClick={onCancel} className="btn-cancel">Otkaži</button>
+              <Button type="submit" variant="save">Sačuvaj</Button>
+              <Button variant="cancel" onClick={onCancel}>Otkaži</Button>
             </div>
           </div>
 
@@ -333,140 +344,121 @@ export function ProfileEdit({
             </div>
           </div>
 
-          {isCreateMode ? (
-            <>
-              <div className="form-row">
-                <div className="form-col">
-                  <div className="form-item">
-                    <label htmlFor="organizaciona_jedinica">Organizaciona jedinica</label>
-                    <select
-                      id="organizaciona_jedinica"
-                      name="organizaciona_jedinica"
-                      className="form-input"
-                      value={formData.organizaciona_jedinica}
-                      onChange={handleChange}
-                    >
-                      <option value="">Odaberite organizacionu jedinicu</option>
-                      {organizacioneJedinice.map(oj => (
-                        <option key={oj.id} value={oj.id}>{oj.naziv}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className="form-col">
-                  <div className="form-item">
-                    <label htmlFor="radno_mesto">Radno mesto</label>
-                    <select
-                      id="radno_mesto"
-                      name="radno_mesto"
-                      className="form-input"
-                      value={formData.radno_mesto}
-                      onChange={handleChange}
-                    >
-                      <option value="">Odaberite radno mesto</option>
-                      {radnaMesta.map(rm => (
-                        <option key={rm.id} value={rm.id}>{rm.naziv}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-row">
-                <div className="form-col">
-                  <div className="form-item">
-                    <label htmlFor="rukovodilac">Rukovodilac</label>
-                    <select
-                      id="rukovodilac"
-                      name="rukovodilac"
-                      className="form-input"
-                      value={formData.rukovodilac}
-                      onChange={handleChange}
-                    >
-                      <option value="">Odaberite rukovodioca</option>
-                      {rukovodioci.map(r => (
-                        <option key={r.id} value={r.id}>{r.first_name} {r.last_name}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className="form-col">
-                  <div className="form-item">
-                    <label htmlFor="role">Uloga</label>
-                    <select
-                      id="role"
-                      name="role"
-                      className="form-input"
-                      value={formData.role}
-                      onChange={handleChange}
-                    >
-                      <option value="zaposleni">Zaposleni</option>
-                      <option value="rukovodilac">Rukovodilac</option>
-                      <option value="administrator">Administrator</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
+          
+          <div className="form-row">
+            <div className="form-col">
               <div className="form-item">
-                <label htmlFor="is_active">
-                  <input
-                    type="checkbox"
-                    id="is_active"
-                    name="is_active"
-                    checked={formData.is_active}
+                <label htmlFor="organizaciona_jedinica">Organizaciona jedinica</label>
+                {canEditOrgJedinica ? (
+                  <select
+                    id="organizaciona_jedinica"
+                    name="organizaciona_jedinica"
+                    className="form-input"
+                    value={formData.organizaciona_jedinica}
                     onChange={handleChange}
-                  />
-                  {' '}Aktivan korisnik
-                </label>
+                  >
+                    <option value="">Odaberite organizacionu jedinicu</option>
+                    {organizacioneJedinice.map(oj => (
+                      <option key={oj.id} value={oj.id}>{oj.naziv}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <>
+                    <input type="text" value={user?.organizaciona_jedinica_naziv || '—'} className="form-input" disabled />
+                    <div className="help-text">Organizaciona jedinica se ne može menjati</div>
+                  </>
+                )}
               </div>
-            </>
-          ) : (
-            <>
+            </div>
+            <div className="form-col">
               <div className="form-item">
-                <label>Organizaciona jedinica</label>
-                <input
-                  type="text"
-                  value={user?.organizaciona_jedinica_naziv || '—'}
-                  className="form-input"
-                  disabled
-                />
-                <div className="help-text">Organizaciona jedinica se ne može menjati ovde</div>
+                <label htmlFor="radno_mesto">Radno mesto</label>
+                {canEditRadnoMesto ? (
+                  <select
+                    id="radno_mesto"
+                    name="radno_mesto"
+                    className="form-input"
+                    value={formData.radno_mesto}
+                    onChange={handleChange}
+                  >
+                    <option value="">Odaberite radno mesto</option>
+                    {radnaMesta.map(rm => (
+                      <option key={rm.id} value={rm.id}>{rm.naziv}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <>
+                    <input type="text" value={user?.radno_mesto_naziv || '—'} className="form-input" disabled />
+                    <div className="help-text">Radno mesto se ne može menjati</div>
+                  </>
+                )}
               </div>
+            </div>
+          </div>
 
+          <div className="form-row">
+            <div className="form-col">
               <div className="form-item">
-                <label>Radno mesto</label>
-                <input
-                  type="text"
-                  value={user?.radno_mesto_naziv || '—'}
-                  className="form-input"
-                  disabled
-                />
-                <div className="help-text">Radno mesto se ne može menjati ovde</div>
+                <label htmlFor="rukovodilac">Rukovodilac</label>
+                {canEditRukovodilac ? (
+                  <select
+                    id="rukovodilac"
+                    name="rukovodilac"
+                    className="form-input"
+                    value={formData.rukovodilac}
+                    onChange={handleChange}
+                  >
+                    <option value="">Odaberite rukovodioca</option>
+                    {rukovodioci.map(r => (
+                      <option key={r.id} value={r.id}>{r.first_name} {r.last_name}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <>
+                    <input type="text" value={user?.rukovodilac_ime || '—'} className="form-input" disabled />
+                    <div className="help-text">Rukovodilac se ne može menjati</div>
+                  </>
+                )}
               </div>
+            </div>
+            <div className="form-col">
+              <div className="form-item">
+                <label htmlFor="role">Uloga</label>
+                {canEditRole ? (
+                  <select
+                    id="role"
+                    name="role"
+                    className="form-input"
+                    value={formData.role}
+                    onChange={handleChange}
+                  >
+                    <option value="zaposleni">Zaposleni</option>
+                    <option value="rukovodilac">Rukovodilac</option>
+                    <option value="administrator">Administrator</option>
+                  </select>
+                ) : (
+                  <>
+                      <input type="text" value={user?.role || '—'} className="form-input" disabled />
+                    <div className="help-text">Uloga se ne može menjati</div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
 
-              <div className="form-item">
-                <label>Rukovodilac</label>
+          {canEditIsActive && (
+            <div className="form-item">
+              <label htmlFor="is_active">
                 <input
-                  type="text"
-                  value={user?.rukovodilac_ime || '—'}
-                  className="form-input"
-                  disabled
+                  type="checkbox"
+                  id="is_active"
+                  name="is_active"
+                  checked={formData.is_active}
+                  onChange={handleChange}
                 />
-                <div className="help-text">Rukovodilac se ne može menjati ovde</div>
-              </div>
-
-              <div className="form-item">
-                <label>Status</label>
-                <input
-                  type="text"
-                  value={user?.role || '—'}
-                  className="form-input"
-                  disabled
-                />
-                <div className="help-text">Status se ne može menjati ovde</div>
-              </div>
-            </>
+                {' '}Aktivan korisnik
+              </label>
+            </div>
           )}
         </form>
       </div>

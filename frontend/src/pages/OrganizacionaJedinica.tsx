@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { organizacioneJediniceApi } from '../api';
 import type { OrganizacionaJedinica as OrgJedinicaType } from '../types';
+import { Button } from '../components/Button';
 import './FormPage.css';
 
 interface OrganizacionaJedinicaProps {
@@ -77,10 +78,10 @@ export function OrganizacionaJedinica({
             <h1 className="form-title">Nova organizaciona jedinica</h1>
               
             <div className="form-buttons">
-              <button type="submit" className="btn-save" disabled={loading}>
+              <Button type="submit" variant="save" disabled={loading}>
                 {loading ? 'Cuvanje...' : 'Sacuvaj'}
-              </button>
-              <button type="button" onClick={onCancel} className="btn-cancel">Otkaži</button>
+              </Button>
+              <Button variant="cancel" onClick={onCancel}>Otkaži</Button>
             </div>
           </div>
 

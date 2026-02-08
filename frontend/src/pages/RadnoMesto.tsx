@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { organizacioneJediniceApi, radnaMestaApi } from '../api';
 import type { OrganizacionaJedinica } from '../types';
+import { Button } from '../components/Button';
 import './FormPage.css';
 
 interface RadnoMestoProps {
@@ -79,10 +80,10 @@ export function RadnoMesto({
               
             
             <div className="form-buttons">
-              <button type="submit" className="btn-save" disabled={loading || jedinice.length === 0}>
+              <Button type="submit" variant="save" disabled={loading || jedinice.length === 0}>
                 {loading ? 'Cuvanje...' : 'Sacuvaj'}
-              </button>
-              <button type="button" onClick={onCancel} className="btn-cancel">Otkaži</button>
+              </Button>
+              <Button variant="cancel" onClick={onCancel}>Otkaži</Button>
             </div>
           </div>
 

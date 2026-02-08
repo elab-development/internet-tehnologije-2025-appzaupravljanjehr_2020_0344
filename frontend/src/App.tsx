@@ -154,6 +154,7 @@ function App() {
         return currentUser ? (
           <ProfileEdit
             user={currentUser}
+            currentUser={currentUser}
             isCreateMode={false}
             organizacioneJedinice={organizacioneJedinice}
             radnaMesta={radnaMesta}
@@ -182,6 +183,7 @@ function App() {
             onAddUser={() => setCurrentPage('profile-create')}
             onViewUser={handleViewUser}
             onEditUser={handleEditUser}
+            currentUserRole={currentUser?.role}
           />
         );
 
@@ -202,6 +204,7 @@ function App() {
         return selectedUser ? (
           <ProfileEdit
             user={selectedUser}
+            currentUser={currentUser}
             isCreateMode={false}
             isUpdateMode={true}
             organizacioneJedinice={organizacioneJedinice}

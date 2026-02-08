@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { dodeljeniCiljeviApi } from '../api';
 import type { DodeljeniCilj, KorisnikFull } from '../types';
+import { Button } from '../components/Button';
 import './Home.css';
 
 interface HomeProps {
@@ -44,9 +45,9 @@ export function Home({ onNavigate, currentUser }: HomeProps) {
         <div className="superuser-message">
           <p>Kao superuser imate pristup svim funkcionalnostima sistema.</p>
           <div className="quick-links">
-            <button onClick={() => onNavigate('users')}>Korisnici</button>
-            <button onClick={() => onNavigate('novi-cilj')}>Novi cilj</button>
-            <button onClick={() => onNavigate('dodela-ciljeva')}>Dodela ciljeva</button>
+            <Button variant="primary" onClick={() => onNavigate('users')}>Korisnici</Button>
+            <Button variant="primary" onClick={() => onNavigate('novi-cilj')}>Novi cilj</Button>
+            <Button variant="primary" onClick={() => onNavigate('dodela-ciljeva')}>Dodela ciljeva</Button>
           </div>
         </div>
       </div>
