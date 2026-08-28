@@ -26,25 +26,25 @@ class Tezinski_koeficijent(models.Model):
     oblast_ocenjivanja_4 = models.ForeignKey(Oblast_ocenjivanja, on_delete=models.CASCADE, related_name='koeficijent_4')
     oblast_ocenjivanja_5 = models.ForeignKey(Oblast_ocenjivanja, on_delete=models.CASCADE, related_name='koeficijent_5')
 
-    def clean(self):
-        ukupno = sum([
-            self.koef_1 or 0,
-            self.koef_2 or 0,
-            self.koef_3 or 0,
-            self.koef_4 or 0,
-            self.koef_5 or 0,
-        ])
-        if round(ukupno, 3) != 1.0:
-            raise ValidationError("Zbir svih koeficijenata mora biti tačno 1.0")
+    def koeficijenti(self):
+        return [self.koef_1, self.koef_2, self.koef_3, self.koef_4, self.koef_5]
 
-        oblasti = [
+    def oblasti(self):
+        return [
             self.oblast_ocenjivanja_1,
             self.oblast_ocenjivanja_2,
             self.oblast_ocenjivanja_3,
             self.oblast_ocenjivanja_4,
-            self.oblast_ocenjivanja_5
+            self.oblast_ocenjivanja_5,
         ]
-        if len(set(oblasti)) != len(oblasti):
+
+    def clean(self):
+        ukupno = sum([k or 0 for k in self.koeficijenti()])
+        if round(float(ukupno), 3) != 1.0:
+            raise ValidationError("Zbir svih koeficijenata mora biti tačno 1.0")
+
+        oblasti_ids = [o.id for o in self.oblasti()]
+        if len(set(oblasti_ids)) != len(oblasti_ids):
             raise ValidationError("Sve oblasti ocenjivanja moraju biti različite")
 
     def __str__(self):
@@ -73,34 +73,22 @@ class Ocena_zaposlenog(models.Model):
     datum_Od = models.DateField()
     datum_Do = models.DateField()
 
+    def ocene(self):
+        return [self.ocena_1, self.ocena_2, self.ocena_3, self.ocena_4, self.ocena5]
+
     def clean(self):
-        for i in range(1, 6):
-            ocena = getattr(self, f"ocena_{i}")
-            if ocena < 1 or ocena > 5:
-                raise ValidationError({f"ocena_{i}": "Ocena mora biti između 1 i 5"})
+        for i, ocena in enumerate(self.ocene(), start=1):
+            if ocena is None or ocena < 1 or ocena > 5:
+                raise ValidationError({f"ocena{i}": "Ocena mora biti između 1 i 5"})
+        if self.datum_Od and self.datum_Do and self.datum_Do < self.datum_Od:
+            raise ValidationError("Datum završetka ne može biti pre datuma početka.")
 
     def izracunaj_zbirnu_ocenu(self):
         if not self.tezinski_koeficijent:
-            raise ValidationError("Težinski koeficijent nije postavljen")
+            self.zbirna_ocena = None
+            return None
 
-        koef = self.tezinski_koeficijent
-
-        ocene = [
-            self.ocena_1,
-            self.ocena_2,
-            self.ocena_3,
-            self.ocena_4,
-            self.ocena_5
-        ]
-        tezine = [
-            koef.koef_1,
-            koef.koef_2,
-            koef.koef_3,
-            koef.koef_4,
-            koef.koef_5
-        ]
-
-        zbirna = sum([o * float(t) for o, t in zip(ocene, tezine)])
+        zbirna = sum(o * float(t) for o, t in zip(self.ocene(), self.tezinski_koeficijent.koeficijenti()))
         self.zbirna_ocena = round(zbirna, 2)
         return self.zbirna_ocena
 
@@ -110,3 +98,8 @@ class Ocena_zaposlenog(models.Model):
 
     def __str__(self):
         return f"{self.zaposleni} - {self.rukovodilac} ({self.datum_Od} do {self.datum_Do}) - {self.zbirna_ocena}"
+
+    class Meta:
+        verbose_name = "Ocena zaposlenog"
+        verbose_name_plural = "Ocene zaposlenih"
+        ordering = ['-datum_Od']

@@ -24,4 +24,8 @@ urlpatterns = [
     path('', include('users.urls')),
     path('', include('firma.urls')),
     path('', include('ciljevi.urls')),
+    path('', include('ocenjivanje.urls')),
+    path('', include('odsustva.urls')),
+    path('', include('plate.urls')),
+    path('', include('kpi.urls')),
 ]

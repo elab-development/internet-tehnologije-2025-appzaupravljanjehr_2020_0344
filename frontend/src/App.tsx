@@ -9,11 +9,24 @@ import { OrganizacionaJedinica } from './pages/OrganizacionaJedinica';
 import { RadnoMesto } from './pages/RadnoMesto';
 import { NoviCilj } from './pages/NoviCilj';
 import { DodelaCiljeva } from './pages/DodelaCiljeva';
+import { Odmori } from './pages/Odmori';
+import { NoviZahtevOdmor } from './pages/NoviZahtevOdmor';
+import { Plate } from './pages/Plate';
+import { Ocenjivanje } from './pages/Ocenjivanje';
+import { Koeficijenti } from './pages/Koeficijenti';
+import { KPI } from './pages/KPI';
+import { DodelaKPI } from './pages/DodelaKPI';
+import { NapredakKPI } from './pages/NapredakKPI';
 import { authApi, korisniciApi, organizacioneJediniceApi, radnaMestaApi } from './api';
 import type { KorisnikFull, OrganizacionaJedinica as OrgJedinicaType, RadnoMesto as RadnoMestoType } from './types';
 import './App.css';
 
-type Page = 'login' | 'home' | 'profile' | 'profile-edit' | 'profile-create' | 'users' | 'user-detail' | 'user-edit' | 'organizaciona-jedinica' | 'radno-mesto' | 'novi-cilj' | 'dodela-ciljeva';
+type Page = 'login' | 'home' | 'profile' | 'profile-edit' | 'profile-create' | 'users' | 'user-detail' | 'user-edit' | 'organizaciona-jedinica' 
+  | 'radno-mesto' | 'novi-cilj' | 'dodela-ciljeva' | 'odmori' | 'novi-zahtev-odmor' | 'plate' | 'ocenjivanje' | 'koeficijenti'
+  | 'kpi' | 'dodela-kpi' | 'napredak-kpi';
+
+const STRANICE_CILJEVA: string[] = ['novi-cilj', 'dodela-ciljeva', 'dodela-kpi'];
+const STRANICE_STRUKTURE: string[] = ['organizaciona-jedinica', 'radno-mesto', 'profile-create', 'plate', 'koeficijenti'];
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -106,12 +119,12 @@ function App() {
     const upravljaCiljevima = userRole && ['superuser', 'administrator', 'rukovodilac'].includes(userRole);
     const upravljaStrukturom = userRole && ['superuser', 'administrator'].includes(userRole);
 
-    if ((page === 'novi-cilj' || page === 'dodela-ciljeva') && !upravljaCiljevima) {
+    if (STRANICE_CILJEVA.includes(page) && !upravljaCiljevima) {
       setCurrentPage('home');
       return;
     }
 
-    if ((page === 'organizaciona-jedinica' || page === 'radno-mesto' || page === 'profile-create') && !upravljaStrukturom) {
+    if (STRANICE_STRUKTURE.includes(page) && !upravljaStrukturom) {
       setCurrentPage('home');
       return;
     }
@@ -246,7 +259,7 @@ function App() {
       case 'organizaciona-jedinica':
         return (
           <OrganizacionaJedinica
-            onSave={() => setCurrentPage('users')}
+            onSave={() => { loadDropdownData(); setCurrentPage('users'); }}
             onCancel={() => setCurrentPage('users')}
           />
         );
@@ -254,7 +267,7 @@ function App() {
       case 'radno-mesto':
         return (
           <RadnoMesto
-            onSave={() => setCurrentPage('users')}
+            onSave={() => { loadDropdownData(); setCurrentPage('users'); }}
             onCancel={() => setCurrentPage('users')}
           />
         );
@@ -275,8 +288,57 @@ function App() {
           />
         );  
 
+      case 'odmori':
+        return currentUser ? (
+          <Odmori
+            currentUser={currentUser}
+            onNoviZahtev={() => setCurrentPage('novi-zahtev-odmor')}
+          />
+        ) : null;
+
+      case 'novi-zahtev-odmor':
+        return (
+          <NoviZahtevOdmor
+            onSave={() => setCurrentPage('odmori')}
+            onCancel={() => setCurrentPage('odmori')}
+          />
+        );
+
+      case 'plate':
+        return <Plate />;
+
+      case 'ocenjivanje':
+        return currentUser ? (
+          <Ocenjivanje
+            currentUser={currentUser}
+            onKoeficijenti={() => handleNavigate('koeficijenti')}
+          />
+        ) : null;
+
+      case 'koeficijenti':
+        return <Koeficijenti />;
+
+      case 'kpi':
+        return currentUser ? (
+          <KPI currentUser={currentUser} onDodela={() => handleNavigate('dodela-kpi')} />
+        ) : null;
+
+      case 'dodela-kpi':
+        return currentUser ? (
+          <DodelaKPI
+            currentUser={currentUser}
+            onSave={() => setCurrentPage('napredak-kpi')}
+            onCancel={() => setCurrentPage('kpi')}
+          />
+        ) : null;
+
+      case 'napredak-kpi':
+        return currentUser ? (
+          <NapredakKPI currentUser={currentUser} onDodela={() => handleNavigate('dodela-kpi')} />
+        ) : null;
+
       default:
-        return <Home onNavigate={handleNavigate} />;
+        return <Home onNavigate={handleNavigate} currentUser={currentUser} />;
     }
   };
 

@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from firma.models import Organizaciona_jedinica, Radno_mesto
 from firma.serializers import OrganizacionaJedinicaSerializer, RadnoMestoSerializer
+from users.models import Korisnik
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
@@ -34,10 +35,15 @@ def api_organizacione_jedinice(request):
     if data.get('nadredjena_org_jed'):
         nadredjena = Organizaciona_jedinica.objects.filter(id=data.get('nadredjena_org_jed')).first()
 
+    rukovodilac = None
+    if data.get('rukovodilac'):
+        rukovodilac = Korisnik.objects.filter(id=data.get('rukovodilac')).first()
+
     jedinica = Organizaciona_jedinica.objects.create(
         naziv=naziv,
         opis=data.get('opis', ''),
-        nadredjena_org_jed=nadredjena
+        nadredjena_org_jed=nadredjena,
+        rukovodilac=rukovodilac
     )
     return Response(OrganizacionaJedinicaSerializer(jedinica).data, status=status.HTTP_201_CREATED)
 
@@ -78,6 +84,11 @@ def api_organizaciona_jedinica(request, id):
             jedinica.nadredjena_org_jed = Organizaciona_jedinica.objects.filter(id=data.get('nadredjena_org_jed')).first()
         else:
             jedinica.nadredjena_org_jed = None
+    if 'rukovodilac' in data:
+        if data.get('rukovodilac'):
+            jedinica.rukovodilac = Korisnik.objects.filter(id=data.get('rukovodilac')).first()
+        else:
+            jedinica.rukovodilac = None
     jedinica.save()
     return Response(OrganizacionaJedinicaSerializer(jedinica).data)
 

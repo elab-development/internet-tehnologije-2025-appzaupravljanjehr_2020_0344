@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'users',
     'ciljevi',
     'ocenjivanje',
+    'odsustva',
+    'plate',
+    'kpi',
     'rest_framework',
     'corsheaders'
 ]

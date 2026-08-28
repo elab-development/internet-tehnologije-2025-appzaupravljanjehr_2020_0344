@@ -1,0 +1,276 @@
+.pregled-wrapper {
+  padding: 40px 20px;
+  min-height: calc(100vh - 100px);
+}
+
+.pregled-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 30px auto;
+  padding: 40px;
+}
+
+.pregled-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #CBD5E1;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.pregled-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1E40AF;
+  margin: 0;
+}
+
+.pregled-subtitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1E293B;
+  margin: 30px 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.pregled-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela thead {
+  background-color: #f1f5f9;
+}
+
+.tabela th {
+  padding: 14px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #1E293B;
+  border-bottom: 2px solid #CBD5E1;
+  font-size: 15px;
+}
+
+.tabela td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 15px;
+  vertical-align: middle;
+}
+
+.tabela tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.tabela tr.izabran {
+  background-color: #e0f2fe;
+}
+
+.tabela-akcije {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.na_cekanju {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.odobren {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.odbijen {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-badge.info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.poruka {
+  padding: 14px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.poruka.greska {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+}
+
+.poruka.uspeh {
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  color: #16a34a;
+}
+
+.poruka.upozorenje {
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+}
+
+.prazno {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+  font-style: italic;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-tile {
+  background: #f8fafc;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+}
+
+.stat-tile .stat-vrednost {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1E40AF;
+}
+
+.stat-tile .stat-naziv {
+  font-size: 13px;
+  color: #64748B;
+  margin-top: 4px;
+}
+
+.stat-tile.upozorenje .stat-vrednost {
+  color: #b45309;
+}
+
+.stat-tile.uspeh .stat-vrednost {
+  color: #059669;
+}
+
+.progress {
+  width: 100%;
+  height: 10px;
+  background: #E2E8F0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #3B82F6;
+  border-radius: 5px;
+  transition: width 0.3s;
+}
+
+.progress-bar.uspeh {
+  background: #10b981;
+}
+
+.progress-bar.upozorenje {
+  background: #f59e0b;
+}
+
+.progress-tekst {
+  font-size: 12px;
+  color: #64748B;
+  margin-top: 4px;
+}
+
+.forma-red {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.forma-red .form-group {
+  flex: 1;
+  min-width: 180px;
+}
+
+.detalj-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.detalj-lista li {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 8px 0;
+  border-bottom: 1px solid #F1F5F9;
+  font-size: 14px;
+}
+
+.detalj-lista li span:first-child {
+  color: #64748B;
+  font-weight: 600;
+}
+
+.ocena-red {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.ocena-red select,
+.ocena-red input {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .pregled-card {
+    padding: 25px 20px;
+  }
+
+  .tabela th,
+  .tabela td {
+    padding: 10px 8px;
+    font-size: 14px;
+  }
+
+  .ocena-red {
+    grid-template-columns: 1fr;
+  }
+}

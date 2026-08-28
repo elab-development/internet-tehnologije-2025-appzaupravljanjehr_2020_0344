@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { organizacioneJediniceApi } from '../api';
-import type { OrganizacionaJedinica as OrgJedinicaType } from '../types';
+import { organizacioneJediniceApi, korisniciApi} from '../api';
+import type { OrganizacionaJedinica as OrgJedinicaType, Korisnik } from '../types';
 import { Button } from '../components/Button';
 import './FormPage.css';
 
@@ -14,24 +14,30 @@ export function OrganizacionaJedinica({
   onCancel,
 }: OrganizacionaJedinicaProps) {
   const [jedinice, setJedinice] = useState<OrgJedinicaType[]>([])
+  const [rukovodioci, setRukovodioci] = useState<Korisnik[]>([]);
   const [formData, setFormData] = useState({
     naziv: '',
     opis: '',
     nadredjena_org_jed: '',
+    rukovodilac: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadJedinice();
+    loadData();
   }, []);
 
-  const loadJedinice = async () => {
+  const loadData = async () => {
     try {
-      const data = await organizacioneJediniceApi.getAll();
-      setJedinice(data);
+      const [jediniceData, korisniciData] = await Promise.all([
+        organizacioneJediniceApi.getAll(),
+        korisniciApi.getAll(),
+      ]);
+      setJedinice(jediniceData);
+      setRukovodioci(korisniciData.filter(k => k.role === 'rukovodilac' || k.role === 'administrator'));
     } catch (err) {
-      console.error('Greska pri ucitavanju organizacionih jedinica:', err);
+      console.error('Greska pri ucitavanju podataka:', err);
     }
   };
 
@@ -59,6 +65,10 @@ export function OrganizacionaJedinica({
 
       if (formData.nadredjena_org_jed) {
         payload.nadredjena_org_jed = Number(formData.nadredjena_org_jed);
+      }
+
+      if (formData.rukovodilac) {
+        payload.rukovodilac = Number(formData.rukovodilac);
       }
 
       await organizacioneJediniceApi.create(payload);
@@ -130,6 +140,21 @@ export function OrganizacionaJedinica({
               ))}
             </select>
             <div className="help-text">Ostavite prazno ako ovo nema nadređenu jedinicu (najviši nivo)</div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="rukovodilac">Rukovodilac organizacione jedinice</label>
+            <select
+              id="rukovodilac"
+              name="rukovodilac"
+              className="form-control"
+              value={formData.rukovodilac}
+              onChange={handleChange}
+            >
+              <option value="">— Nije određen —</option>
+              {rukovodioci.map(r => (
+                <option key={r.id} value={r.id}>{r.first_name} {r.last_name} ({r.role})</option>
+              ))}
+            </select>
           </div>
         </form>
       </div>
