@@ -8,9 +8,28 @@ from ciljevi.models import Tip_cilja, Cilj, Dodeljeni_cilj
 from ciljevi.serializers import TipCiljaSerializer, CiljSerializer, DodeljeniCiljSerializer
 from users.models import Korisnik
 from firma.models import Organizaciona_jedinica, Radno_mesto
-
+from drf_spectacular.utils import extend_schema
+from swagger_common import (
+    ODG_400, ODG_401, ODG_403, ODG_404, UspehSerializer,
+    TipCiljaRequestSerializer, CiljRequestSerializer, DodeljeniCiljRequestSerializer,
+    DodelaMasovnoRequestSerializer, DodelaMasovnoResponseSerializer,
+)
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Ciljevi'],
+    summary='Lista tipova ciljeva',
+    responses={200: TipCiljaSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Ciljevi'],
+    summary='Kreiranje tipa cilja',
+    description='Superuser, administrator ili rukovodilac. Naziv mora biti jedinstven.',
+    request=TipCiljaRequestSerializer,
+    responses={201: TipCiljaSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_tipovi_ciljeva(request):
@@ -36,6 +55,20 @@ def api_tipovi_ciljeva(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Ciljevi'],
+    summary='Lista ciljeva',
+    responses={200: CiljSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Ciljevi'],
+    summary='Kreiranje cilja',
+    description='Superuser, administrator ili rukovodilac.',
+    request=CiljRequestSerializer,
+    responses={201: CiljSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_ciljevi(request):
@@ -73,6 +106,27 @@ def api_ciljevi(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Ciljevi'],
+    summary='Detalji cilja',
+    responses={200: CiljSerializer, 401: ODG_401, 404: ODG_404},
+)
+@extend_schema(
+    methods=['PUT'],
+    tags=['Ciljevi'],
+    summary='Izmena cilja',
+    description='Superuser, administrator ili rukovodilac.',
+    request=CiljRequestSerializer,
+    responses={200: CiljSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['DELETE'],
+    tags=['Ciljevi'],
+    summary='Brisanje cilja',
+    description='Samo superuser i administrator.',
+    responses={200: UspehSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def api_cilj(request, id):
@@ -109,6 +163,21 @@ def api_cilj(request, id):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Ciljevi'],
+    summary='Lista dodeljenih ciljeva',
+    description='Superuser/administrator vide sve; rukovodilac svoje i svojih zaposlenih; zaposleni samo svoje.',
+    responses={200: DodeljeniCiljSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Ciljevi'],
+    summary='Dodela cilja jednom zaposlenom',
+    description='Administrator dodeljuje rukovodiocima i administratorima; rukovodilac samo svojim zaposlenima.',
+    request=DodeljeniCiljRequestSerializer,
+    responses={201: DodeljeniCiljSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_dodeljeni_ciljevi(request):
@@ -178,6 +247,13 @@ def api_dodeljeni_ciljevi(request):
 
 
 @csrf_exempt
+@extend_schema(
+    tags=['Ciljevi'],
+    summary='Masovna dodela cilja',
+    description='Dodeljuje cilj svim zaposlenima izabranim po ID-jevima, radnom mestu ili organizacionoj jedinici. Preskače već dodeljene.',
+    request=DodelaMasovnoRequestSerializer,
+    responses={200: DodelaMasovnoResponseSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def api_dodeli_cilj_masovno(request):

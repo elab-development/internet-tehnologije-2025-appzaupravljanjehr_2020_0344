@@ -11,7 +11,12 @@ from plate.models import Plata, Isplata
 from plate.serializers import PlataSerializer, IsplataSerializer
 from users.models import Korisnik
 from firma.models import Radno_mesto
-
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from swagger_common import (
+    ODG_400, ODG_401, ODG_403, ODG_404, UspehSerializer,
+    PlataRequestSerializer, PlataUpdateSerializer,
+    IsplataRequestSerializer, IsplataUpdateSerializer, PlatePregledSerializer,
+)
 
 def je_admin(user):
     return user.role in ['superuser', 'administrator']
@@ -30,6 +35,21 @@ def u_decimal(vrednost, naziv):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Plate'],
+    summary='Lista plata po radnim mestima',
+    description='Administrator vidi sve; ostali samo platu za svoje radno mesto.',
+    responses={200: PlataSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Plate'],
+    summary='Definisanje plate za radno mesto',
+    description='Samo superuser/administrator. Po jedna plata po radnom mestu.',
+    request=PlataRequestSerializer,
+    responses={201: PlataSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_plate(request):
@@ -76,6 +96,25 @@ def api_plate(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Plate'],
+    summary='Detalji plate',
+    responses={200: PlataSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['PUT'],
+    tags=['Plate'],
+    summary='Izmena plate',
+    request=PlataUpdateSerializer,
+    responses={200: PlataSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['DELETE'],
+    tags=['Plate'],
+    summary='Brisanje plate',
+    responses={200: UspehSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def api_plata(request, id):
@@ -120,6 +159,12 @@ def api_plata(request, id):
 
 
 @csrf_exempt
+@extend_schema(
+    tags=['Plate'],
+    summary='Finansijski pregled po zaposlenima',
+    description='Za svakog aktivnog zaposlenog: plata radnog mesta, broj isplata, poslednja isplata i ukupno isplaćeno u tekućoj godini. Samo administrator.',
+    responses={200: PlatePregledSerializer(many=True), 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def api_plate_pregled(request):
@@ -158,6 +203,23 @@ def api_plate_pregled(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Plate'],
+    summary='Lista isplata',
+    parameters=[
+        OpenApiParameter('korisnik', int, OpenApiParameter.QUERY, description='Filter po ID zaposlenog'),
+    ],
+    responses={200: IsplataSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Plate'],
+    summary='Evidentiranje isplate',
+    description='Samo administrator. Ako iznosi nisu navedeni, preuzimaju se iz plate radnog mesta.',
+    request=IsplataRequestSerializer,
+    responses={201: IsplataSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_isplate(request):
@@ -231,6 +293,25 @@ def api_isplate(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Plate'],
+    summary='Detalji isplate',
+    responses={200: IsplataSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['PUT'],
+    tags=['Plate'],
+    summary='Izmena isplate',
+    request=IsplataUpdateSerializer,
+    responses={200: IsplataSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['DELETE'],
+    tags=['Plate'],
+    summary='Brisanje isplate',
+    responses={200: UspehSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def api_isplata(request, id):

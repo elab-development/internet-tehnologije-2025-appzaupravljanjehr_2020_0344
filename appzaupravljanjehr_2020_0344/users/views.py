@@ -8,9 +8,22 @@ from rest_framework.response import Response
 from rest_framework import status
 from users.serializers import KorisnikSerializer, KorisnikFullSerializer
 from users.permissions import IsSuperuserOrAdmin
+from drf_spectacular.utils import extend_schema, OpenApiResponse
+from swagger_common import (
+    ODG_400, ODG_401, ODG_403, ODG_404, UspehSerializer,
+    LoginRequestSerializer, LoginResponseSerializer,
+    KorisnikCreateSerializer, KorisnikUpdateSerializer,
+)
 
 
 @csrf_exempt
+@extend_schema(
+    tags=['Autentifikacija'],
+    summary='Prijava korisnika',
+    description='Prijavljuje korisnika preko sesije (session cookie). Vraća podatke o ulogovanom korisniku.',
+    request=LoginRequestSerializer,
+    responses={200: LoginResponseSerializer, 401: OpenApiResponse(description='Pogrešno korisničko ime ili lozinka.')},
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def api_login(request):
@@ -25,6 +38,12 @@ def api_login(request):
 
 
 @csrf_exempt
+@extend_schema(
+    tags=['Autentifikacija'],
+    summary='Odjava korisnika',
+    request=None,
+    responses={200: UspehSerializer},
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def api_logout(request):
@@ -33,6 +52,20 @@ def api_logout(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Korisnici'],
+    summary='Lista svih korisnika',
+    responses={200: KorisnikSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Korisnici'],
+    summary='Kreiranje novog korisnika',
+    description='Dozvoljeno samo za uloge superuser i administrator. Username i JMBG moraju biti jedinstveni.',
+    request=KorisnikCreateSerializer,
+    responses={201: KorisnikFullSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_korisnici(request):
@@ -94,6 +127,28 @@ def api_korisnici(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Korisnici'],
+    summary='Detalji korisnika',
+    description='Superuser/administrator vide sve profile, ostali samo sopstveni.',
+    responses={200: KorisnikFullSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['PUT'],
+    tags=['Korisnici'],
+    summary='Izmena korisnika',
+    description='Zaposleni menja sopstvene osnovne podatke; superuser/administrator mogu menjati i ulogu, org. jedinicu, radno mesto i rukovodioca.',
+    request=KorisnikUpdateSerializer,
+    responses={200: KorisnikFullSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['DELETE'],
+    tags=['Korisnici'],
+    summary='Brisanje korisnika',
+    description='Samo superuser i administrator.',
+    responses={200: UspehSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def api_korisnik(request, id):

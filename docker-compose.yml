@@ -1,0 +1,48 @@
+services:
+  #Baza podataka
+  db:
+    image: mysql:8.0
+    container_name: hr_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3307:3306"          
+    volumes:
+      - db_data:/var/lib/mysql   
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  #Django backend
+  backend:
+    build: ./appzaupravljanjehr_2020_0344
+    container_name: hr_backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DB_HOST: db           
+      DB_PORT: 3306
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy   
+  #React frontend (nginx)
+  frontend:
+    build: ./frontend
+    container_name: hr_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
+

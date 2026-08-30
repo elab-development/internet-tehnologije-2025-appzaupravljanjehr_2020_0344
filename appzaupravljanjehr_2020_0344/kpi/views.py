@@ -9,7 +9,13 @@ from rest_framework import status
 from kpi.models import KPI, Dodeljeni_KPI, Ostvareni_KPI
 from kpi.serializers import KPISerializer, DodeljeniKPISerializer, DodeljeniKPIDetaljSerializer, OstvareniKPISerializer
 from users.models import Korisnik
-
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from swagger_common import (
+    ODG_400, ODG_401, ODG_403, ODG_404, UspehSerializer,
+    KPIRequestSerializer, KPIUpdateSerializer,
+    DodeljeniKPIRequestSerializer, DodeljeniKPIResponseSerializer,
+    OstvareniKPIRequestSerializer,
+)
 
 def moze_da_upravlja(user):
     return user.role in ['superuser', 'administrator', 'rukovodilac']
@@ -43,6 +49,19 @@ def u_decimal(vrednost, naziv):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['KPI'],
+    summary='Lista KPI pokazatelja',
+    responses={200: KPISerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['KPI'],
+    summary='Kreiranje KPI pokazatelja',
+    request=KPIRequestSerializer,
+    responses={201: KPISerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_kpi(request):
@@ -73,6 +92,25 @@ def api_kpi(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['KPI'],
+    summary='Detalji KPI pokazatelja',
+    responses={200: KPISerializer, 401: ODG_401, 404: ODG_404},
+)
+@extend_schema(
+    methods=['PUT'],
+    tags=['KPI'],
+    summary='Izmena KPI pokazatelja',
+    request=KPIUpdateSerializer,
+    responses={200: KPISerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['DELETE'],
+    tags=['KPI'],
+    summary='Brisanje KPI pokazatelja',
+    responses={200: UspehSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def api_kpi_detalj(request, id):
@@ -118,6 +156,23 @@ def api_kpi_detalj(request, id):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['KPI'],
+    summary='Lista dodeljenih KPI',
+    parameters=[
+        OpenApiParameter('korisnik', int, OpenApiParameter.QUERY, description='Filter po ID zaposlenog'),
+    ],
+    responses={200: DodeljeniKPISerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['KPI'],
+    summary='Dodela KPI jednom ili više zaposlenih',
+    description='Rukovodilac dodeljuje samo zaposlenima iz svog tima. Već dodeljeni za isti period se preskaču.',
+    request=DodeljeniKPIRequestSerializer,
+    responses={201: DodeljeniKPIResponseSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_dodeljeni_kpi(request):
@@ -183,6 +238,18 @@ def api_dodeljeni_kpi(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['KPI'],
+    summary='Detalji dodeljenog KPI (sa istorijom unosa)',
+    responses={200: DodeljeniKPIDetaljSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['DELETE'],
+    tags=['KPI'],
+    summary='Uklanjanje dodeljenog KPI',
+    responses={200: UspehSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET', 'DELETE'])
 @permission_classes([AllowAny])
 def api_dodeljeni_kpi_detalj(request, id):
@@ -205,6 +272,23 @@ def api_dodeljeni_kpi_detalj(request, id):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['KPI'],
+    summary='Lista unosa ostvarenih vrednosti KPI',
+    parameters=[
+        OpenApiParameter('dodeljeni_kpi', int, OpenApiParameter.QUERY, description='Filter po ID dodeljenog KPI'),
+    ],
+    responses={200: OstvareniKPISerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['KPI'],
+    summary='Unos ostvarene vrednosti KPI',
+    description='Rukovodilac unosi napredak za zaposlene iz svog tima. Datum ne može biti pre početka perioda.',
+    request=OstvareniKPIRequestSerializer,
+    responses={201: OstvareniKPISerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_ostvareni_kpi(request):
@@ -266,6 +350,11 @@ def api_ostvareni_kpi(request):
 
 
 @csrf_exempt
+@extend_schema(
+    tags=['KPI'],
+    summary='Brisanje unosa ostvarene vrednosti',
+    responses={200: UspehSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['DELETE'])
 @permission_classes([AllowAny])
 def api_ostvareni_kpi_detalj(request, id):

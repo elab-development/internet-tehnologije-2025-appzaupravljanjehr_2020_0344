@@ -10,9 +10,27 @@ from ocenjivanje.models import Oblast_ocenjivanja, Tezinski_koeficijent, Ocena_z
 from ocenjivanje.serializers import OblastOcenjivanjaSerializer, TezinskiKoeficijentSerializer, OcenaSerializer
 from users.models import Korisnik
 from firma.models import Radno_mesto
-
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from swagger_common import (
+    ODG_400, ODG_401, ODG_403, ODG_404, UspehSerializer,
+    OblastRequestSerializer, TezinskiKoeficijentRequestSerializer,
+    OcenaRequestSerializer, OcenaUpdateSerializer,
+)
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Ocenjivanje'],
+    summary='Lista oblasti ocenjivanja',
+    responses={200: OblastOcenjivanjaSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Ocenjivanje'],
+    summary='Kreiranje oblasti ocenjivanja',
+    request=OblastRequestSerializer,
+    responses={201: OblastOcenjivanjaSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_oblasti_ocenjivanja(request):
@@ -70,6 +88,23 @@ def popuni_koeficijent(koef, data):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Ocenjivanje'],
+    summary='Lista težinskih koeficijenata',
+    parameters=[
+        OpenApiParameter('radno_mesto', int, OpenApiParameter.QUERY, description='Filter po ID radnog mesta'),
+    ],
+    responses={200: TezinskiKoeficijentSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Ocenjivanje'],
+    summary='Kreiranje težinskih koeficijenata za radno mesto',
+    description='Samo superuser i administrator. Po jedan skup koeficijenata po radnom mestu.',
+    request=TezinskiKoeficijentRequestSerializer,
+    responses={201: TezinskiKoeficijentSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_tezinski_koeficijenti(request):
@@ -98,6 +133,25 @@ def api_tezinski_koeficijenti(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Ocenjivanje'],
+    summary='Detalji težinskih koeficijenata',
+    responses={200: TezinskiKoeficijentSerializer, 401: ODG_401, 404: ODG_404},
+)
+@extend_schema(
+    methods=['PUT'],
+    tags=['Ocenjivanje'],
+    summary='Izmena težinskih koeficijenata',
+    request=TezinskiKoeficijentRequestSerializer,
+    responses={200: TezinskiKoeficijentSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['DELETE'],
+    tags=['Ocenjivanje'],
+    summary='Brisanje težinskih koeficijenata',
+    responses={200: UspehSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def api_tezinski_koeficijent(request, id):
@@ -142,6 +196,23 @@ def ocene_za_korisnika(user):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Ocenjivanje'],
+    summary='Lista ocena zaposlenih',
+    parameters=[
+        OpenApiParameter('zaposleni', int, OpenApiParameter.QUERY, description='Filter po ID zaposlenog'),
+    ],
+    responses={200: OcenaSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Ocenjivanje'],
+    summary='Unos ocene zaposlenog',
+    description='Rukovodilac ocenjuje zaposlene iz svog tima po pet oblasti (1–5). Zbirna ocena se računa prema težinskim koeficijentima radnog mesta.',
+    request=OcenaRequestSerializer,
+    responses={201: OcenaSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_ocene(request):
@@ -228,6 +299,25 @@ def api_ocene(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Ocenjivanje'],
+    summary='Detalji ocene',
+    responses={200: OcenaSerializer, 401: ODG_401, 404: ODG_404},
+)
+@extend_schema(
+    methods=['PUT'],
+    tags=['Ocenjivanje'],
+    summary='Izmena ocene',
+    request=OcenaUpdateSerializer,
+    responses={200: OcenaSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['DELETE'],
+    tags=['Ocenjivanje'],
+    summary='Brisanje ocene',
+    responses={200: UspehSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def api_ocena(request, id):

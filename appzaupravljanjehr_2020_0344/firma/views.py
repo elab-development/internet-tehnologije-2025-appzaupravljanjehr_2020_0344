@@ -9,8 +9,27 @@ from rest_framework import status
 from firma.models import Organizaciona_jedinica, Radno_mesto
 from firma.serializers import OrganizacionaJedinicaSerializer, RadnoMestoSerializer
 from users.models import Korisnik
+from drf_spectacular.utils import extend_schema
+from swagger_common import (
+    ODG_400, ODG_401, ODG_403, ODG_404, UspehSerializer,
+    OrgJedinicaRequestSerializer, RadnoMestoRequestSerializer,
+)
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Firma'],
+    summary='Lista organizacionih jedinica',
+    responses={200: OrganizacionaJedinicaSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Firma'],
+    summary='Kreiranje organizacione jedinice',
+    description='Samo superuser i administrator.',
+    request=OrgJedinicaRequestSerializer,
+    responses={201: OrganizacionaJedinicaSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_organizacione_jedinice(request):
@@ -49,6 +68,27 @@ def api_organizacione_jedinice(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Firma'],
+    summary='Detalji organizacione jedinice',
+    responses={200: OrganizacionaJedinicaSerializer, 401: ODG_401, 404: ODG_404},
+)
+@extend_schema(
+    methods=['PUT'],
+    tags=['Firma'],
+    summary='Izmena organizacione jedinice',
+    description='Samo superuser i administrator.',
+    request=OrgJedinicaRequestSerializer,
+    responses={200: OrganizacionaJedinicaSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['DELETE'],
+    tags=['Firma'],
+    summary='Brisanje organizacione jedinice',
+    description='Samo superuser.',
+    responses={200: UspehSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def api_organizaciona_jedinica(request, id):
@@ -94,6 +134,20 @@ def api_organizaciona_jedinica(request, id):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Firma'],
+    summary='Lista radnih mesta',
+    responses={200: RadnoMestoSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Firma'],
+    summary='Kreiranje radnog mesta',
+    description='Samo superuser i administrator. Organizaciona jedinica je obavezna.',
+    request=RadnoMestoRequestSerializer,
+    responses={201: RadnoMestoSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_radna_mesta(request):
@@ -130,6 +184,27 @@ def api_radna_mesta(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Firma'],
+    summary='Detalji radnog mesta',
+    responses={200: RadnoMestoSerializer, 401: ODG_401, 404: ODG_404},
+)
+@extend_schema(
+    methods=['PUT'],
+    tags=['Firma'],
+    summary='Izmena radnog mesta',
+    description='Samo superuser i administrator.',
+    request=RadnoMestoRequestSerializer,
+    responses={200: RadnoMestoSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['DELETE'],
+    tags=['Firma'],
+    summary='Brisanje radnog mesta',
+    description='Samo superuser.',
+    responses={200: UspehSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def api_radno_mesto(request, id):

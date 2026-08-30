@@ -9,7 +9,11 @@ from rest_framework import status
 from odsustva.models import Odmor, stanje_odmora, broj_radnih_dana
 from odsustva.serializers import OdmorSerializer, OdmorDetaljSerializer
 from users.models import Korisnik
-
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from swagger_common import (
+    ODG_400, ODG_401, ODG_403, ODG_404, UspehSerializer,
+    OdmorRequestSerializer, OdmorOdlukaSerializer, StanjeOdmoraSerializer,
+)
 
 def odmori_za_korisnika(user):
     if user.role in ['superuser', 'administrator']:
@@ -21,6 +25,25 @@ def odmori_za_korisnika(user):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Odsustva'],
+    summary='Lista zahteva za odmor',
+    description='Zaposleni vidi svoje zahteve, rukovodilac zahteve svog tima, administrator sve.',
+    parameters=[
+        OpenApiParameter('status', str, OpenApiParameter.QUERY, description='na_cekanju | odobren | odbijen'),
+        OpenApiParameter('zaposleni', int, OpenApiParameter.QUERY, description='Filter po ID zaposlenog'),
+    ],
+    responses={200: OdmorSerializer(many=True), 401: ODG_401},
+)
+@extend_schema(
+    methods=['POST'],
+    tags=['Odsustva'],
+    summary='Podnošenje zahteva za odmor',
+    description='Period mora biti unutar jedne kalendarske godine, sadržati bar jedan radni dan i ne sme se preklapati sa postojećim zahtevom.',
+    request=OdmorRequestSerializer,
+    responses={201: OdmorDetaljSerializer, 400: ODG_400, 401: ODG_401},
+)
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def api_odmori(request):
@@ -94,6 +117,27 @@ def api_odmori(request):
 
 
 @csrf_exempt
+@extend_schema(
+    methods=['GET'],
+    tags=['Odsustva'],
+    summary='Detalji zahteva za odmor (sa stanjem dana)',
+    responses={200: OdmorDetaljSerializer, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['PUT'],
+    tags=['Odsustva'],
+    summary='Odobravanje ili odbijanje zahteva',
+    description='Samo superuser/administrator. Zahtev mora biti na čekanju. Za odbijanje je obavezan razlog.',
+    request=OdmorOdlukaSerializer,
+    responses={200: OdmorDetaljSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
+@extend_schema(
+    methods=['DELETE'],
+    tags=['Odsustva'],
+    summary='Povlačenje zahteva',
+    description='Zaposleni može povući samo sopstveni zahtev koji je još na čekanju.',
+    responses={200: UspehSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
 def api_odmor(request, id):
@@ -149,6 +193,16 @@ def api_odmor(request, id):
 
 
 @csrf_exempt
+@extend_schema(
+    tags=['Odsustva'],
+    summary='Stanje godišnjeg odmora',
+    description='Ukupan fond dana, iskorišćeno, na čekanju i preostalo za zadatu godinu.',
+    parameters=[
+        OpenApiParameter('zaposleni', int, OpenApiParameter.QUERY, description='ID zaposlenog (podrazumevano: ulogovani korisnik)'),
+        OpenApiParameter('godina', int, OpenApiParameter.QUERY, description='Godina (podrazumevano: tekuća)'),
+    ],
+    responses={200: StanjeOdmoraSerializer, 400: ODG_400, 401: ODG_401, 403: ODG_403, 404: ODG_404},
+)
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def api_stanje_odmora(request):

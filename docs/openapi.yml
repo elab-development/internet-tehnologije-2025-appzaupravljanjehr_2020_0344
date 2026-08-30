@@ -1,0 +1,4157 @@
+openapi: 3.0.3
+info:
+  title: HR aplikacija – API
+  version: 1.0.0
+  description: 'REST API za upravljanje ljudskim resursima: korisnici, organizacione
+    jedinice, radna mesta, ciljevi, ocenjivanje, odsustva, plate i KPI.'
+paths:
+  /api/ciljevi/:
+    get:
+      operationId: ciljevi_list
+      summary: Lista ciljeva
+      tags:
+      - Ciljevi
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cilj'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: ciljevi_create
+      description: Superuser, administrator ili rukovodilac.
+      summary: Kreiranje cilja
+      tags:
+      - Ciljevi
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CiljRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CiljRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CiljRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cilj'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/ciljevi/{id}/:
+    get:
+      operationId: ciljevi_retrieve
+      summary: Detalji cilja
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ciljevi
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cilj'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    put:
+      operationId: ciljevi_update
+      description: Superuser, administrator ili rukovodilac.
+      summary: Izmena cilja
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ciljevi
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CiljRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CiljRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CiljRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cilj'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    delete:
+      operationId: ciljevi_destroy
+      description: Samo superuser i administrator.
+      summary: Brisanje cilja
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ciljevi
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/dodeli-cilj-masovno/:
+    post:
+      operationId: dodeli_cilj_masovno_create
+      description: Dodeljuje cilj svim zaposlenima izabranim po ID-jevima, radnom
+        mestu ili organizacionoj jedinici. Preskače već dodeljene.
+      summary: Masovna dodela cilja
+      tags:
+      - Ciljevi
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DodelaMasovnoRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DodelaMasovnoRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DodelaMasovnoRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DodelaMasovnoResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/dodeljeni-ciljevi/:
+    get:
+      operationId: dodeljeni_ciljevi_list
+      description: Superuser/administrator vide sve; rukovodilac svoje i svojih zaposlenih;
+        zaposleni samo svoje.
+      summary: Lista dodeljenih ciljeva
+      tags:
+      - Ciljevi
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DodeljeniCilj'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: dodeljeni_ciljevi_create
+      description: Administrator dodeljuje rukovodiocima i administratorima; rukovodilac
+        samo svojim zaposlenima.
+      summary: Dodela cilja jednom zaposlenom
+      tags:
+      - Ciljevi
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DodeljeniCiljRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DodeljeniCiljRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DodeljeniCiljRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DodeljeniCilj'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/dodeljeni-kpi/:
+    get:
+      operationId: dodeljeni_kpi_list
+      summary: Lista dodeljenih KPI
+      parameters:
+      - in: query
+        name: korisnik
+        schema:
+          type: integer
+        description: Filter po ID zaposlenog
+      tags:
+      - KPI
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DodeljeniKPI'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: dodeljeni_kpi_create
+      description: Rukovodilac dodeljuje samo zaposlenima iz svog tima. Već dodeljeni
+        za isti period se preskaču.
+      summary: Dodela KPI jednom ili više zaposlenih
+      tags:
+      - KPI
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DodeljeniKPIRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DodeljeniKPIRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DodeljeniKPIRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DodeljeniKPIResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/dodeljeni-kpi/{id}/:
+    get:
+      operationId: dodeljeni_kpi_retrieve
+      summary: Detalji dodeljenog KPI (sa istorijom unosa)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - KPI
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DodeljeniKPIDetalj'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    delete:
+      operationId: dodeljeni_kpi_destroy
+      summary: Uklanjanje dodeljenog KPI
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - KPI
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/isplate/:
+    get:
+      operationId: isplate_list
+      summary: Lista isplata
+      parameters:
+      - in: query
+        name: korisnik
+        schema:
+          type: integer
+        description: Filter po ID zaposlenog
+      tags:
+      - Plate
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Isplata'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: isplate_create
+      description: Samo administrator. Ako iznosi nisu navedeni, preuzimaju se iz
+        plate radnog mesta.
+      summary: Evidentiranje isplate
+      tags:
+      - Plate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IsplataRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IsplataRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IsplataRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Isplata'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/isplate/{id}/:
+    get:
+      operationId: isplate_retrieve
+      summary: Detalji isplate
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Plate
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Isplata'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    put:
+      operationId: isplate_update
+      summary: Izmena isplate
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Plate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IsplataUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IsplataUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/IsplataUpdateRequest'
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Isplata'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    delete:
+      operationId: isplate_destroy
+      summary: Brisanje isplate
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Plate
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/korisnici/:
+    get:
+      operationId: korisnici_list
+      summary: Lista svih korisnika
+      tags:
+      - Korisnici
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Korisnik'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: korisnici_create
+      description: Dozvoljeno samo za uloge superuser i administrator. Username i
+        JMBG moraju biti jedinstveni.
+      summary: Kreiranje novog korisnika
+      tags:
+      - Korisnici
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KorisnikCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/KorisnikCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/KorisnikCreateRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KorisnikFull'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/korisnici/{id}/:
+    get:
+      operationId: korisnici_retrieve
+      description: Superuser/administrator vide sve profile, ostali samo sopstveni.
+      summary: Detalji korisnika
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Korisnici
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KorisnikFull'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    put:
+      operationId: korisnici_update
+      description: Zaposleni menja sopstvene osnovne podatke; superuser/administrator
+        mogu menjati i ulogu, org. jedinicu, radno mesto i rukovodioca.
+      summary: Izmena korisnika
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Korisnici
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KorisnikUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/KorisnikUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/KorisnikUpdateRequest'
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KorisnikFull'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    delete:
+      operationId: korisnici_destroy
+      description: Samo superuser i administrator.
+      summary: Brisanje korisnika
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Korisnici
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/kpi/:
+    get:
+      operationId: kpi_list
+      summary: Lista KPI pokazatelja
+      tags:
+      - KPI
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KPI'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: kpi_create
+      summary: Kreiranje KPI pokazatelja
+      tags:
+      - KPI
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KPIRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/KPIRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/KPIRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPI'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/kpi/{id}/:
+    get:
+      operationId: kpi_retrieve
+      summary: Detalji KPI pokazatelja
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - KPI
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPI'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    put:
+      operationId: kpi_update
+      summary: Izmena KPI pokazatelja
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - KPI
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KPIUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/KPIUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/KPIUpdateRequest'
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPI'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    delete:
+      operationId: kpi_destroy
+      summary: Brisanje KPI pokazatelja
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - KPI
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/login/:
+    post:
+      operationId: login_create
+      description: Prijavljuje korisnika preko sesije (session cookie). Vraća podatke
+        o ulogovanom korisniku.
+      summary: Prijava korisnika
+      tags:
+      - Autentifikacija
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+          description: ''
+        '401':
+          description: Pogrešno korisničko ime ili lozinka.
+  /api/logout/:
+    post:
+      operationId: logout_create
+      summary: Odjava korisnika
+      tags:
+      - Autentifikacija
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+  /api/oblasti-ocenjivanja/:
+    get:
+      operationId: oblasti_ocenjivanja_list
+      summary: Lista oblasti ocenjivanja
+      tags:
+      - Ocenjivanje
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OblastOcenjivanja'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: oblasti_ocenjivanja_create
+      summary: Kreiranje oblasti ocenjivanja
+      tags:
+      - Ocenjivanje
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OblastRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OblastRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OblastRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OblastOcenjivanja'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/ocene/:
+    get:
+      operationId: ocene_list
+      summary: Lista ocena zaposlenih
+      parameters:
+      - in: query
+        name: zaposleni
+        schema:
+          type: integer
+        description: Filter po ID zaposlenog
+      tags:
+      - Ocenjivanje
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ocena'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: ocene_create
+      description: Rukovodilac ocenjuje zaposlene iz svog tima po pet oblasti (1–5).
+        Zbirna ocena se računa prema težinskim koeficijentima radnog mesta.
+      summary: Unos ocene zaposlenog
+      tags:
+      - Ocenjivanje
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OcenaRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OcenaRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OcenaRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ocena'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/ocene/{id}/:
+    get:
+      operationId: ocene_retrieve
+      summary: Detalji ocene
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ocenjivanje
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ocena'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    put:
+      operationId: ocene_update
+      summary: Izmena ocene
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ocenjivanje
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OcenaUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OcenaUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OcenaUpdateRequest'
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ocena'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    delete:
+      operationId: ocene_destroy
+      summary: Brisanje ocene
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ocenjivanje
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/odmori/:
+    get:
+      operationId: odmori_list
+      description: Zaposleni vidi svoje zahteve, rukovodilac zahteve svog tima, administrator
+        sve.
+      summary: Lista zahteva za odmor
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
+        description: na_cekanju | odobren | odbijen
+      - in: query
+        name: zaposleni
+        schema:
+          type: integer
+        description: Filter po ID zaposlenog
+      tags:
+      - Odsustva
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Odmor'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: odmori_create
+      description: Period mora biti unutar jedne kalendarske godine, sadržati bar
+        jedan radni dan i ne sme se preklapati sa postojećim zahtevom.
+      summary: Podnošenje zahteva za odmor
+      tags:
+      - Odsustva
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OdmorRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OdmorRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OdmorRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OdmorDetalj'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+  /api/odmori/{id}/:
+    get:
+      operationId: odmori_retrieve
+      summary: Detalji zahteva za odmor (sa stanjem dana)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Odsustva
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OdmorDetalj'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    put:
+      operationId: odmori_update
+      description: Samo superuser/administrator. Zahtev mora biti na čekanju. Za odbijanje
+        je obavezan razlog.
+      summary: Odobravanje ili odbijanje zahteva
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Odsustva
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OdmorOdlukaRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OdmorOdlukaRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OdmorOdlukaRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OdmorDetalj'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    delete:
+      operationId: odmori_destroy
+      description: Zaposleni može povući samo sopstveni zahtev koji je još na čekanju.
+      summary: Povlačenje zahteva
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Odsustva
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/odmori/stanje/:
+    get:
+      operationId: odmori_stanje_retrieve
+      description: Ukupan fond dana, iskorišćeno, na čekanju i preostalo za zadatu
+        godinu.
+      summary: Stanje godišnjeg odmora
+      parameters:
+      - in: query
+        name: godina
+        schema:
+          type: integer
+        description: 'Godina (podrazumevano: tekuća)'
+      - in: query
+        name: zaposleni
+        schema:
+          type: integer
+        description: 'ID zaposlenog (podrazumevano: ulogovani korisnik)'
+      tags:
+      - Odsustva
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StanjeOdmora'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/organizacione-jedinice/:
+    get:
+      operationId: organizacione_jedinice_list
+      summary: Lista organizacionih jedinica
+      tags:
+      - Firma
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizacionaJedinica'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: organizacione_jedinice_create
+      description: Samo superuser i administrator.
+      summary: Kreiranje organizacione jedinice
+      tags:
+      - Firma
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgJedinicaRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrgJedinicaRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrgJedinicaRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizacionaJedinica'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/organizacione-jedinice/{id}/:
+    get:
+      operationId: organizacione_jedinice_retrieve
+      summary: Detalji organizacione jedinice
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Firma
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizacionaJedinica'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    put:
+      operationId: organizacione_jedinice_update
+      description: Samo superuser i administrator.
+      summary: Izmena organizacione jedinice
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Firma
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgJedinicaRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrgJedinicaRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrgJedinicaRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizacionaJedinica'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    delete:
+      operationId: organizacione_jedinice_destroy
+      description: Samo superuser.
+      summary: Brisanje organizacione jedinice
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Firma
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/ostvareni-kpi/:
+    get:
+      operationId: ostvareni_kpi_list
+      summary: Lista unosa ostvarenih vrednosti KPI
+      parameters:
+      - in: query
+        name: dodeljeni_kpi
+        schema:
+          type: integer
+        description: Filter po ID dodeljenog KPI
+      tags:
+      - KPI
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OstvareniKPI'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: ostvareni_kpi_create
+      description: Rukovodilac unosi napredak za zaposlene iz svog tima. Datum ne
+        može biti pre početka perioda.
+      summary: Unos ostvarene vrednosti KPI
+      tags:
+      - KPI
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OstvareniKPIRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OstvareniKPIRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OstvareniKPIRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OstvareniKPI'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/ostvareni-kpi/{id}/:
+    delete:
+      operationId: ostvareni_kpi_destroy
+      summary: Brisanje unosa ostvarene vrednosti
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - KPI
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/plate/:
+    get:
+      operationId: plate_list
+      description: Administrator vidi sve; ostali samo platu za svoje radno mesto.
+      summary: Lista plata po radnim mestima
+      tags:
+      - Plate
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plata'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: plate_create
+      description: Samo superuser/administrator. Po jedna plata po radnom mestu.
+      summary: Definisanje plate za radno mesto
+      tags:
+      - Plate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlataRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PlataRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PlataRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plata'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/plate/{id}/:
+    get:
+      operationId: plate_retrieve
+      summary: Detalji plate
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Plate
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plata'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    put:
+      operationId: plate_update
+      summary: Izmena plate
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Plate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlataUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PlataUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PlataUpdateRequest'
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plata'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    delete:
+      operationId: plate_destroy
+      summary: Brisanje plate
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Plate
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/plate/pregled/:
+    get:
+      operationId: plate_pregled_list
+      description: 'Za svakog aktivnog zaposlenog: plata radnog mesta, broj isplata,
+        poslednja isplata i ukupno isplaćeno u tekućoj godini. Samo administrator.'
+      summary: Finansijski pregled po zaposlenima
+      tags:
+      - Plate
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlatePregled'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/radna-mesta/:
+    get:
+      operationId: radna_mesta_list
+      summary: Lista radnih mesta
+      tags:
+      - Firma
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RadnoMesto'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: radna_mesta_create
+      description: Samo superuser i administrator. Organizaciona jedinica je obavezna.
+      summary: Kreiranje radnog mesta
+      tags:
+      - Firma
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RadnoMestoRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RadnoMestoRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RadnoMestoRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RadnoMesto'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/radna-mesta/{id}/:
+    get:
+      operationId: radna_mesta_retrieve
+      summary: Detalji radnog mesta
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Firma
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RadnoMesto'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    put:
+      operationId: radna_mesta_update
+      description: Samo superuser i administrator.
+      summary: Izmena radnog mesta
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Firma
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RadnoMestoRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RadnoMestoRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RadnoMestoRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RadnoMesto'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    delete:
+      operationId: radna_mesta_destroy
+      description: Samo superuser.
+      summary: Brisanje radnog mesta
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Firma
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/tezinski-koeficijenti/:
+    get:
+      operationId: tezinski_koeficijenti_list
+      summary: Lista težinskih koeficijenata
+      parameters:
+      - in: query
+        name: radno_mesto
+        schema:
+          type: integer
+        description: Filter po ID radnog mesta
+      tags:
+      - Ocenjivanje
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TezinskiKoeficijent'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: tezinski_koeficijenti_create
+      description: Samo superuser i administrator. Po jedan skup koeficijenata po
+        radnom mestu.
+      summary: Kreiranje težinskih koeficijenata za radno mesto
+      tags:
+      - Ocenjivanje
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TezinskiKoeficijentRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TezinskiKoeficijentRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TezinskiKoeficijentRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TezinskiKoeficijent'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+  /api/tezinski-koeficijenti/{id}/:
+    get:
+      operationId: tezinski_koeficijenti_retrieve
+      summary: Detalji težinskih koeficijenata
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ocenjivanje
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TezinskiKoeficijent'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    put:
+      operationId: tezinski_koeficijenti_update
+      summary: Izmena težinskih koeficijenata
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ocenjivanje
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TezinskiKoeficijentRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TezinskiKoeficijentRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TezinskiKoeficijentRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TezinskiKoeficijent'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+    delete:
+      operationId: tezinski_koeficijenti_destroy
+      summary: Brisanje težinskih koeficijenata
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ocenjivanje
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Uspeh'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Zapis nije pronađen
+  /api/tipovi-ciljeva/:
+    get:
+      operationId: tipovi_ciljeva_list
+      summary: Lista tipova ciljeva
+      tags:
+      - Ciljevi
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TipCilja'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+    post:
+      operationId: tipovi_ciljeva_create
+      description: Superuser, administrator ili rukovodilac. Naziv mora biti jedinstven.
+      summary: Kreiranje tipa cilja
+      tags:
+      - Ciljevi
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TipCiljaRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TipCiljaRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TipCiljaRequestRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TipCilja'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Neispravni ili nepotpuni podaci
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Niste ulogovani
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greska'
+          description: Nemate dozvolu za ovu akciju
+components:
+  schemas:
+    Cilj:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        naziv:
+          type: string
+          maxLength: 100
+        tip_cilja:
+          type: integer
+        tip_cilja_naziv:
+          type: string
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/CiljStatusEnum'
+      required:
+      - id
+      - naziv
+      - tip_cilja
+      - tip_cilja_naziv
+    CiljRequestRequest:
+      type: object
+      properties:
+        naziv:
+          type: string
+          minLength: 1
+        tip_cilja:
+          type: integer
+        status:
+          type: string
+          minLength: 1
+          description: 'podrazumevano: aktivan'
+      required:
+      - naziv
+      - tip_cilja
+    CiljStatusEnum:
+      enum:
+      - aktivan
+      - neaktivan
+      type: string
+      description: |-
+        * `aktivan` - Aktivan
+        * `neaktivan` - Neaktivan
+    DodelaMasovnoRequestRequest:
+      type: object
+      properties:
+        cilj:
+          type: integer
+        datum_Od:
+          type: string
+          format: date
+        datum_Do:
+          type: string
+          format: date
+        organizaciona_jedinica:
+          type: integer
+        radno_mesto:
+          type: integer
+        zaposleni_ids:
+          type: array
+          items:
+            type: integer
+      required:
+      - cilj
+      - datum_Do
+      - datum_Od
+    DodelaMasovnoResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        created:
+          type: integer
+        skipped:
+          type: integer
+        message:
+          type: string
+      required:
+      - created
+      - message
+      - skipped
+      - success
+    DodeljeniCilj:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cilj:
+          type: integer
+        cilj_naziv:
+          type: string
+          readOnly: true
+        zaposleni:
+          type: integer
+        zaposleni_ime:
+          type: string
+          readOnly: true
+        datum_Od:
+          type: string
+          format: date
+        datum_Do:
+          type: string
+          format: date
+      required:
+      - cilj
+      - cilj_naziv
+      - datum_Do
+      - datum_Od
+      - id
+      - zaposleni
+      - zaposleni_ime
+    DodeljeniCiljRequestRequest:
+      type: object
+      properties:
+        cilj:
+          type: integer
+        zaposleni:
+          type: integer
+        datum_Od:
+          type: string
+          format: date
+        datum_Do:
+          type: string
+          format: date
+      required:
+      - cilj
+      - datum_Do
+      - datum_Od
+      - zaposleni
+    DodeljeniKPI:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        kpi:
+          type: integer
+        kpi_naziv:
+          type: string
+          readOnly: true
+        kpi_opis:
+          type: string
+          readOnly: true
+        kpi_target:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        korisnik:
+          type: integer
+        korisnik_ime:
+          type: string
+          readOnly: true
+        datum_Od:
+          type: string
+          format: date
+        datum_Do:
+          type: string
+          format: date
+        datum_dodele:
+          type: string
+          format: date
+          readOnly: true
+        poslednja_vrednost:
+          type: string
+          readOnly: true
+        procenat:
+          type: string
+          readOnly: true
+        broj_unosa:
+          type: string
+          readOnly: true
+      required:
+      - broj_unosa
+      - datum_Do
+      - datum_Od
+      - datum_dodele
+      - id
+      - korisnik
+      - korisnik_ime
+      - kpi
+      - kpi_naziv
+      - kpi_opis
+      - kpi_target
+      - poslednja_vrednost
+      - procenat
+    DodeljeniKPIDetalj:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        kpi:
+          type: integer
+        kpi_naziv:
+          type: string
+          readOnly: true
+        kpi_opis:
+          type: string
+          readOnly: true
+        kpi_target:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        korisnik:
+          type: integer
+        korisnik_ime:
+          type: string
+          readOnly: true
+        datum_Od:
+          type: string
+          format: date
+        datum_Do:
+          type: string
+          format: date
+        datum_dodele:
+          type: string
+          format: date
+          readOnly: true
+        poslednja_vrednost:
+          type: string
+          readOnly: true
+        procenat:
+          type: string
+          readOnly: true
+        broj_unosa:
+          type: string
+          readOnly: true
+        istorija:
+          type: array
+          items:
+            $ref: '#/components/schemas/OstvareniKPI'
+          readOnly: true
+      required:
+      - broj_unosa
+      - datum_Do
+      - datum_Od
+      - datum_dodele
+      - id
+      - istorija
+      - korisnik
+      - korisnik_ime
+      - kpi
+      - kpi_naziv
+      - kpi_opis
+      - kpi_target
+      - poslednja_vrednost
+      - procenat
+    DodeljeniKPIRequestRequest:
+      type: object
+      properties:
+        kpi:
+          type: integer
+        korisnici:
+          type: array
+          items:
+            type: integer
+        datum_Od:
+          type: string
+          format: date
+        datum_Do:
+          type: string
+          format: date
+      required:
+      - datum_Do
+      - datum_Od
+      - korisnici
+      - kpi
+    DodeljeniKPIResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        created:
+          type: integer
+        skipped:
+          type: integer
+        message:
+          type: string
+        dodeljeni:
+          type: array
+          items:
+            $ref: '#/components/schemas/DodeljeniKPI'
+      required:
+      - created
+      - dodeljeni
+      - message
+      - skipped
+      - success
+    Greska:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+      - error
+    Isplata:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        korisnik:
+          type: integer
+        korisnik_ime:
+          type: string
+          readOnly: true
+        plata:
+          type: integer
+          nullable: true
+        datum_isplate:
+          type: string
+          format: date
+        iznos_bruto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        iznos_neto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        bonus:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        ukupno_neto:
+          type: string
+          readOnly: true
+        izmenio:
+          type: integer
+          nullable: true
+        izmenio_ime:
+          type: string
+          readOnly: true
+        datum_izmene:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - datum_isplate
+      - datum_izmene
+      - id
+      - izmenio_ime
+      - iznos_bruto
+      - iznos_neto
+      - korisnik
+      - korisnik_ime
+      - ukupno_neto
+    IsplataRequestRequest:
+      type: object
+      properties:
+        korisnik:
+          type: integer
+        datum_isplate:
+          type: string
+          format: date
+        iznos_bruto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        iznos_neto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        bonus:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - datum_isplate
+      - korisnik
+    IsplataUpdateRequest:
+      type: object
+      properties:
+        datum_isplate:
+          type: string
+          format: date
+        iznos_bruto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        iznos_neto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        bonus:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+    KPI:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        naziv:
+          type: string
+          maxLength: 255
+        opis:
+          type: string
+          nullable: true
+        target:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - id
+      - naziv
+      - target
+    KPIRequestRequest:
+      type: object
+      properties:
+        naziv:
+          type: string
+          minLength: 1
+        opis:
+          type: string
+          minLength: 1
+        target:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - naziv
+      - target
+    KPIUpdateRequest:
+      type: object
+      properties:
+        naziv:
+          type: string
+          minLength: 1
+        opis:
+          type: string
+          minLength: 1
+        target:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+    Korisnik:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          title: Email address
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        role:
+          $ref: '#/components/schemas/Role771Enum'
+        jmbg:
+          type: string
+          maxLength: 13
+        broj_telefona:
+          type: string
+          maxLength: 15
+        organizaciona_jedinica:
+          type: integer
+          nullable: true
+        radno_mesto:
+          type: integer
+          nullable: true
+        rukovodilac:
+          type: integer
+          nullable: true
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+      required:
+      - broj_telefona
+      - id
+      - jmbg
+      - username
+    KorisnikCreateRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+        jmbg:
+          type: string
+          minLength: 1
+          maxLength: 13
+        first_name:
+          type: string
+          minLength: 1
+        last_name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+          minLength: 1
+        srednje_ime:
+          type: string
+          minLength: 1
+        pol:
+          type: string
+          minLength: 1
+        datum_rodjenja:
+          type: string
+          format: date
+        mesto_rodjenja:
+          type: string
+          minLength: 1
+        drzava:
+          type: string
+          minLength: 1
+        adresa:
+          type: string
+          minLength: 1
+        broj_telefona:
+          type: string
+          minLength: 1
+        strucna_sprema:
+          type: string
+          minLength: 1
+        role:
+          $ref: '#/components/schemas/RoleA28Enum'
+        organizaciona_jedinica:
+          type: integer
+          nullable: true
+        radno_mesto:
+          type: integer
+          nullable: true
+        rukovodilac:
+          type: integer
+          nullable: true
+        is_active:
+          type: boolean
+      required:
+      - jmbg
+      - password
+      - username
+    KorisnikFull:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          title: Email address
+          oneOf:
+          - type: string
+            format: email
+            maxLength: 254
+          - type: string
+            maxLength: 0
+        role:
+          $ref: '#/components/schemas/Role771Enum'
+        jmbg:
+          type: string
+          maxLength: 13
+        broj_telefona:
+          type: string
+          maxLength: 15
+        srednje_ime:
+          type: string
+          maxLength: 50
+        pol:
+          $ref: '#/components/schemas/PolEnum'
+        datum_rodjenja:
+          type: string
+          format: date
+        mesto_rodjenja:
+          type: string
+          nullable: true
+          maxLength: 50
+        drzava:
+          type: string
+          nullable: true
+          maxLength: 50
+        adresa:
+          type: string
+          maxLength: 255
+        strucna_sprema:
+          type: string
+          maxLength: 50
+        organizaciona_jedinica:
+          type: integer
+          nullable: true
+        organizaciona_jedinica_naziv:
+          type: string
+          readOnly: true
+        radno_mesto:
+          type: integer
+          nullable: true
+        radno_mesto_naziv:
+          type: string
+          readOnly: true
+        rukovodilac:
+          type: integer
+          nullable: true
+        rukovodilac_ime:
+          type: string
+          readOnly: true
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+      required:
+      - adresa
+      - broj_telefona
+      - datum_rodjenja
+      - id
+      - jmbg
+      - organizaciona_jedinica_naziv
+      - radno_mesto_naziv
+      - rukovodilac_ime
+      - srednje_ime
+      - strucna_sprema
+      - username
+    KorisnikUpdateRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+        last_name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+          minLength: 1
+        srednje_ime:
+          type: string
+          minLength: 1
+        pol:
+          type: string
+          minLength: 1
+        datum_rodjenja:
+          type: string
+          format: date
+        adresa:
+          type: string
+          minLength: 1
+        broj_telefona:
+          type: string
+          minLength: 1
+        strucna_sprema:
+          type: string
+          minLength: 1
+        role:
+          $ref: '#/components/schemas/RoleA28Enum'
+        organizaciona_jedinica:
+          type: integer
+          nullable: true
+        radno_mesto:
+          type: integer
+          nullable: true
+        rukovodilac:
+          type: integer
+          nullable: true
+    LoginRequestRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+      required:
+      - password
+      - username
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        user:
+          $ref: '#/components/schemas/KorisnikFull'
+      required:
+      - success
+      - user
+    OblastOcenjivanja:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        naziv:
+          type: string
+          maxLength: 100
+        opis:
+          type: string
+          nullable: true
+      required:
+      - id
+      - naziv
+    OblastRequestRequest:
+      type: object
+      properties:
+        naziv:
+          type: string
+          minLength: 1
+        opis:
+          type: string
+          minLength: 1
+      required:
+      - naziv
+    Ocena:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        zaposleni:
+          type: integer
+        zaposleni_ime:
+          type: string
+          readOnly: true
+        rukovodilac:
+          type: integer
+          nullable: true
+        rukovodilac_ime:
+          type: string
+          readOnly: true
+        tezinski_koeficijent:
+          type: integer
+          nullable: true
+        ocena_1:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        ocena_2:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        ocena_3:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        ocena_4:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        ocena_5:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        zbirna_ocena:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,2})?$
+          nullable: true
+        datum_Od:
+          type: string
+          format: date
+        datum_Do:
+          type: string
+          format: date
+        oblasti:
+          type: string
+          readOnly: true
+      required:
+      - datum_Do
+      - datum_Od
+      - id
+      - oblasti
+      - ocena_1
+      - ocena_2
+      - ocena_3
+      - ocena_4
+      - ocena_5
+      - rukovodilac_ime
+      - zaposleni
+      - zaposleni_ime
+    OcenaRequestRequest:
+      type: object
+      properties:
+        zaposleni:
+          type: integer
+        datum_Od:
+          type: string
+          format: date
+        datum_Do:
+          type: string
+          format: date
+        ocena_1:
+          type: integer
+          maximum: 5
+          minimum: 1
+        ocena_2:
+          type: integer
+          maximum: 5
+          minimum: 1
+        ocena_3:
+          type: integer
+          maximum: 5
+          minimum: 1
+        ocena_4:
+          type: integer
+          maximum: 5
+          minimum: 1
+        ocena_5:
+          type: integer
+          maximum: 5
+          minimum: 1
+      required:
+      - datum_Do
+      - datum_Od
+      - ocena_1
+      - ocena_2
+      - ocena_3
+      - ocena_4
+      - ocena_5
+      - zaposleni
+    OcenaUpdateRequest:
+      type: object
+      properties:
+        ocena_1:
+          type: integer
+          maximum: 5
+          minimum: 1
+        ocena_2:
+          type: integer
+          maximum: 5
+          minimum: 1
+        ocena_3:
+          type: integer
+          maximum: 5
+          minimum: 1
+        ocena_4:
+          type: integer
+          maximum: 5
+          minimum: 1
+        ocena_5:
+          type: integer
+          maximum: 5
+          minimum: 1
+    Odmor:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        zaposleni:
+          type: integer
+        zaposleni_ime:
+          type: string
+          readOnly: true
+        organizaciona_jedinica_naziv:
+          type: string
+          readOnly: true
+        rukovodilac:
+          type: integer
+          nullable: true
+        rukovodilac_ime:
+          type: string
+          readOnly: true
+        datum_Od:
+          type: string
+          format: date
+        datum_Do:
+          type: string
+          format: date
+        broj_dana:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+        napomena:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/StatusD57Enum'
+        status_naziv:
+          type: string
+          readOnly: true
+        razlog_odbijanja:
+          type: string
+          nullable: true
+        datum_podnosenja:
+          type: string
+          format: date-time
+          readOnly: true
+        obradio:
+          type: integer
+          nullable: true
+        obradio_ime:
+          type: string
+          readOnly: true
+        datum_obrade:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - datum_Do
+      - datum_Od
+      - datum_podnosenja
+      - id
+      - obradio_ime
+      - organizaciona_jedinica_naziv
+      - rukovodilac_ime
+      - status_naziv
+      - zaposleni
+      - zaposleni_ime
+    OdmorDetalj:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        zaposleni:
+          type: integer
+        zaposleni_ime:
+          type: string
+          readOnly: true
+        organizaciona_jedinica_naziv:
+          type: string
+          readOnly: true
+        rukovodilac:
+          type: integer
+          nullable: true
+        rukovodilac_ime:
+          type: string
+          readOnly: true
+        datum_Od:
+          type: string
+          format: date
+        datum_Do:
+          type: string
+          format: date
+        broj_dana:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+        napomena:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/StatusD57Enum'
+        status_naziv:
+          type: string
+          readOnly: true
+        razlog_odbijanja:
+          type: string
+          nullable: true
+        datum_podnosenja:
+          type: string
+          format: date-time
+          readOnly: true
+        obradio:
+          type: integer
+          nullable: true
+        obradio_ime:
+          type: string
+          readOnly: true
+        datum_obrade:
+          type: string
+          format: date-time
+          nullable: true
+        stanje:
+          type: string
+          readOnly: true
+      required:
+      - datum_Do
+      - datum_Od
+      - datum_podnosenja
+      - id
+      - obradio_ime
+      - organizaciona_jedinica_naziv
+      - rukovodilac_ime
+      - stanje
+      - status_naziv
+      - zaposleni
+      - zaposleni_ime
+    OdmorOdlukaRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/OdmorOdlukaStatusEnum'
+        razlog_odbijanja:
+          type: string
+          minLength: 1
+          description: obavezno ako je status = odbijen
+      required:
+      - status
+    OdmorOdlukaStatusEnum:
+      enum:
+      - odobren
+      - odbijen
+      type: string
+      description: |-
+        * `odobren` - odobren
+        * `odbijen` - odbijen
+    OdmorRequestRequest:
+      type: object
+      properties:
+        datum_Od:
+          type: string
+          format: date
+        datum_Do:
+          type: string
+          format: date
+        napomena:
+          type: string
+          minLength: 1
+      required:
+      - datum_Do
+      - datum_Od
+    OrgJedinicaRequestRequest:
+      type: object
+      properties:
+        naziv:
+          type: string
+          minLength: 1
+        opis:
+          type: string
+          minLength: 1
+        nadredjena_org_jed:
+          type: integer
+          nullable: true
+        rukovodilac:
+          type: integer
+          nullable: true
+      required:
+      - naziv
+    OrganizacionaJedinica:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        naziv:
+          type: string
+          maxLength: 255
+        opis:
+          type: string
+        nadredjena_org_jed:
+          type: integer
+          nullable: true
+        rukovodilac:
+          type: integer
+          nullable: true
+        rukovodilac_ime:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - naziv
+      - opis
+      - rukovodilac_ime
+    OstvareniKPI:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        dodeljeni_kpi:
+          type: integer
+        ostvarena_vrednost:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        datum:
+          type: string
+          format: date
+        opis:
+          type: string
+          nullable: true
+        rukovodilac:
+          type: integer
+          nullable: true
+        rukovodilac_ime:
+          type: string
+          readOnly: true
+      required:
+      - datum
+      - dodeljeni_kpi
+      - id
+      - ostvarena_vrednost
+      - rukovodilac_ime
+    OstvareniKPIRequestRequest:
+      type: object
+      properties:
+        dodeljeni_kpi:
+          type: integer
+        ostvarena_vrednost:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        datum:
+          type: string
+          format: date
+        opis:
+          type: string
+          minLength: 1
+      required:
+      - datum
+      - dodeljeni_kpi
+      - ostvarena_vrednost
+    Plata:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        radno_mesto:
+          type: integer
+        radno_mesto_naziv:
+          type: string
+          readOnly: true
+        org_jed_naziv:
+          type: string
+          readOnly: true
+        bruto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        neto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - bruto
+      - id
+      - neto
+      - org_jed_naziv
+      - radno_mesto
+      - radno_mesto_naziv
+    PlataRequestRequest:
+      type: object
+      properties:
+        radno_mesto:
+          type: integer
+        bruto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        neto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - bruto
+      - neto
+      - radno_mesto
+    PlataUpdateRequest:
+      type: object
+      properties:
+        bruto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        neto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+    PlatePregled:
+      type: object
+      properties:
+        id:
+          type: integer
+        ime:
+          type: string
+        role:
+          type: string
+        radno_mesto:
+          type: integer
+          nullable: true
+        radno_mesto_naziv:
+          type: string
+          nullable: true
+        organizaciona_jedinica_naziv:
+          type: string
+          nullable: true
+        plata_id:
+          type: integer
+          nullable: true
+        bruto:
+          type: string
+          nullable: true
+        neto:
+          type: string
+          nullable: true
+        broj_isplata:
+          type: integer
+        poslednja_isplata:
+          type: string
+          format: date
+          nullable: true
+        isplaceno_neto_godina:
+          type: string
+        bonusi_godina:
+          type: string
+      required:
+      - bonusi_godina
+      - broj_isplata
+      - bruto
+      - id
+      - ime
+      - isplaceno_neto_godina
+      - neto
+      - organizaciona_jedinica_naziv
+      - plata_id
+      - poslednja_isplata
+      - radno_mesto
+      - radno_mesto_naziv
+      - role
+    PolEnum:
+      enum:
+      - M
+      - Z
+      type: string
+      description: |-
+        * `M` - Muški
+        * `Z` - Zenski
+    RadnoMesto:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        naziv:
+          type: string
+          maxLength: 255
+        opis:
+          type: string
+        org_jed:
+          type: integer
+        org_jed_naziv:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - naziv
+      - opis
+      - org_jed
+      - org_jed_naziv
+    RadnoMestoRequestRequest:
+      type: object
+      properties:
+        naziv:
+          type: string
+          minLength: 1
+        opis:
+          type: string
+          minLength: 1
+        org_jed:
+          type: integer
+      required:
+      - naziv
+      - org_jed
+    Role771Enum:
+      enum:
+      - superuser
+      - administrator
+      - rukovodilac
+      - zaposleni
+      type: string
+      description: |-
+        * `superuser` - Superuser
+        * `administrator` - Administrator
+        * `rukovodilac` - Rukovodilac
+        * `zaposleni` - Zaposleni
+    RoleA28Enum:
+      enum:
+      - superuser
+      - administrator
+      - rukovodilac
+      - zaposleni
+      type: string
+      description: |-
+        * `superuser` - superuser
+        * `administrator` - administrator
+        * `rukovodilac` - rukovodilac
+        * `zaposleni` - zaposleni
+    StanjeOdmora:
+      type: object
+      properties:
+        godina:
+          type: integer
+        ukupno:
+          type: integer
+        iskorisceno:
+          type: integer
+        na_cekanju:
+          type: integer
+        preostalo:
+          type: integer
+      required:
+      - godina
+      - iskorisceno
+      - na_cekanju
+      - preostalo
+      - ukupno
+    StatusD57Enum:
+      enum:
+      - na_cekanju
+      - odobren
+      - odbijen
+      type: string
+      description: |-
+        * `na_cekanju` - Na čekanju
+        * `odobren` - Odobren
+        * `odbijen` - Odbijen
+    TezinskiKoeficijent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        radno_mesto:
+          type: integer
+        radno_mesto_naziv:
+          type: string
+          readOnly: true
+        org_jed_naziv:
+          type: string
+          readOnly: true
+        oblast_ocenjivanja_1:
+          type: integer
+        oblast_1_naziv:
+          type: string
+          readOnly: true
+        koef_1:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,3})?$
+        oblast_ocenjivanja_2:
+          type: integer
+        oblast_2_naziv:
+          type: string
+          readOnly: true
+        koef_2:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,3})?$
+        oblast_ocenjivanja_3:
+          type: integer
+        oblast_3_naziv:
+          type: string
+          readOnly: true
+        koef_3:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,3})?$
+        oblast_ocenjivanja_4:
+          type: integer
+        oblast_4_naziv:
+          type: string
+          readOnly: true
+        koef_4:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,3})?$
+        oblast_ocenjivanja_5:
+          type: integer
+        oblast_5_naziv:
+          type: string
+          readOnly: true
+        koef_5:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,1}(?:\.\d{0,3})?$
+      required:
+      - id
+      - koef_1
+      - koef_2
+      - koef_3
+      - koef_4
+      - koef_5
+      - oblast_1_naziv
+      - oblast_2_naziv
+      - oblast_3_naziv
+      - oblast_4_naziv
+      - oblast_5_naziv
+      - oblast_ocenjivanja_1
+      - oblast_ocenjivanja_2
+      - oblast_ocenjivanja_3
+      - oblast_ocenjivanja_4
+      - oblast_ocenjivanja_5
+      - org_jed_naziv
+      - radno_mesto
+      - radno_mesto_naziv
+    TezinskiKoeficijentRequestRequest:
+      type: object
+      properties:
+        radno_mesto:
+          type: integer
+        oblast_ocenjivanja_1:
+          type: integer
+        oblast_ocenjivanja_2:
+          type: integer
+        oblast_ocenjivanja_3:
+          type: integer
+        oblast_ocenjivanja_4:
+          type: integer
+        oblast_ocenjivanja_5:
+          type: integer
+        koef_1:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        koef_2:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        koef_3:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        koef_4:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        koef_5:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+      required:
+      - koef_1
+      - koef_2
+      - koef_3
+      - koef_4
+      - koef_5
+      - oblast_ocenjivanja_1
+      - oblast_ocenjivanja_2
+      - oblast_ocenjivanja_3
+      - oblast_ocenjivanja_4
+      - oblast_ocenjivanja_5
+      - radno_mesto
+    TipCilja:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        naziv:
+          type: string
+          maxLength: 255
+      required:
+      - id
+      - naziv
+    TipCiljaRequestRequest:
+      type: object
+      properties:
+        naziv:
+          type: string
+          minLength: 1
+      required:
+      - naziv
+    Uspeh:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+      - success

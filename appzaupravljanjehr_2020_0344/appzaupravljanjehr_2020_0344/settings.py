@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vmvoojs&kvhxdo*qki9e_ugxwxf^4h%z$@c_tvw&(@q7e_8otq'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','django-insecure-vmvoojs&kvhxdo*qki9e_ugxwxf^4h%z$@c_tvw&(@q7e_8otq')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '1') == '1'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,backend').split(',')
 
 
 # Application definition
@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'plate',
     'kpi',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -89,11 +90,11 @@ WSGI_APPLICATION = 'appzaupravljanjehr_2020_0344.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'emikonrs_iteh',
-        'USER': 'emikonrs_andjela',
-        'PASSWORD': '@H6m^x&ifoLc',
-        'HOST': '194.146.59.72', 
-        'PORT': '3306',        
+        'NAME':     os.environ.get('DB_NAME',     'emikonrs_iteh'),
+        'USER':     os.environ.get('DB_USER',     'emikonrs_andjela'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', '@H6m^x&ifoLc'),
+        'HOST':     os.environ.get('DB_HOST',     '194.146.59.72'),
+        'PORT':     os.environ.get('DB_PORT',     '3306'),    
     }
 }
 
@@ -141,9 +142,24 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
 }
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000/', 'http://127.0.0.1:3000/']
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'HR aplikacija – API',
+    'DESCRIPTION': 'REST API za upravljanje ljudskim resursima: korisnici, organizacione '
+                   'jedinice, radna mesta, ciljevi, ocenjivanje, odsustva, plate i KPI.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+}
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000/', 'http://127.0.0.1:3000/',
+    'http://localhost:8000/', 'http://127.0.0.1:8000/',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
