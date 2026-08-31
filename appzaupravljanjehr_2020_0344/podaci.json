@@ -1,0 +1,643 @@
+[
+{
+  "model": "users.korisnik",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$Pnfq2q7yf6S9QrW1C9soH0$OKsaP8RPYv3mWV2w1/QSqFIdP/zKqJdARTKvf2gtrac=",
+    "last_login": "2026-08-30T09:44:19.475Z",
+    "is_superuser": true,
+    "username": "ivanaiandjela",
+    "first_name": "Ivana",
+    "last_name": "Andjela",
+    "email": "andjelaivana@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-01-30T19:52:02.111Z",
+    "role": "superuser",
+    "jmbg": "0000000000000",
+    "srednje_ime": "ITEH",
+    "pol": "Ž",
+    "datum_rodjenja": "2026-02-01",
+    "drzava": null,
+    "adresa": "Jove Ilica 154",
+    "mesto_rodjenja": null,
+    "strucna_sprema": "Viša škola",
+    "broj_telefona": "0645858585",
+    "organizaciona_jedinica": null,
+    "radno_mesto": null,
+    "rukovodilac": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.korisnik",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$mYnr3WsNJ2BOUNld4vY6d2$O1cVJFQNJhlHINTqt3d7HB644oNsfEJCrZ8zE7RpJiE=",
+    "last_login": "2026-08-28T22:01:37.950Z",
+    "is_superuser": false,
+    "username": "milicamilic",
+    "first_name": "Milica",
+    "last_name": "Milic",
+    "email": "milicamilic@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-02-03T16:12:49.951Z",
+    "role": "rukovodilac",
+    "jmbg": "0202002715202",
+    "srednje_ime": "Marija",
+    "pol": "Z",
+    "datum_rodjenja": "2002-02-02",
+    "drzava": "Serbia",
+    "adresa": "Kneza Milosa 24",
+    "mesto_rodjenja": "Beograd",
+    "strucna_sprema": "Fakultet",
+    "broj_telefona": "0645858585",
+    "organizaciona_jedinica": 9,
+    "radno_mesto": 6,
+    "rukovodilac": 6,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.korisnik",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$AKvPIxMHdZAAt3C9ZjlFIE$ARp62qgIuG4GhgNjumO8W4aoRrucBGHCPi3lVEyakiI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "nikolamarkovic",
+    "first_name": "Nikola",
+    "last_name": "Marković",
+    "email": "nikolamarkovic@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-02-08T15:24:29.479Z",
+    "role": "rukovodilac",
+    "jmbg": "1503997710554",
+    "srednje_ime": "Miloš",
+    "pol": "M",
+    "datum_rodjenja": "1997-12-03",
+    "drzava": "Srbija",
+    "adresa": "Tanaska Rajica 10",
+    "mesto_rodjenja": "Kragujevac",
+    "strucna_sprema": "Master",
+    "broj_telefona": "0645596822",
+    "organizaciona_jedinica": 11,
+    "radno_mesto": 9,
+    "rukovodilac": 6,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.korisnik",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$ucDXhBfg2Aut6CAaVR60Ep$YtNSg0hdIBVs2+lKb5nq9fcgT1Qi1TBvOdUHwWbq2To=",
+    "last_login": "2026-02-08T18:27:52.589Z",
+    "is_superuser": false,
+    "username": "markojovanovic",
+    "first_name": "Marko",
+    "last_name": "Jovanović",
+    "email": "marko.jovanovic@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-02-08T15:34:41.872Z",
+    "role": "administrator",
+    "jmbg": "1405980710023",
+    "srednje_ime": "Petar",
+    "pol": "M",
+    "datum_rodjenja": "1980-05-14",
+    "drzava": "Srbija",
+    "adresa": "Nemanjina 12, Beograd",
+    "mesto_rodjenja": "Beograd",
+    "strucna_sprema": "Master",
+    "broj_telefona": "0641234567",
+    "organizaciona_jedinica": 8,
+    "radno_mesto": 5,
+    "rukovodilac": 6,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.korisnik",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$X4xXrWIHLHMSjRdfI64orA$+m9tNqrMxhU/oOE9K+ZrlQDJG/2lyU74hrAR1AKiM0I=",
+    "last_login": "2026-02-08T18:38:11.666Z",
+    "is_superuser": false,
+    "username": "nikolailic",
+    "first_name": "Nikola",
+    "last_name": "Ilić",
+    "email": "nikolailic@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-02-08T15:38:16.026Z",
+    "role": "administrator",
+    "jmbg": "1103976710045",
+    "srednje_ime": "Aleksandar",
+    "pol": "M",
+    "datum_rodjenja": "1976-03-11",
+    "drzava": "Srbija",
+    "adresa": "Bulevar oslobođenja 100",
+    "mesto_rodjenja": "Beograd",
+    "strucna_sprema": "Doktorat",
+    "broj_telefona": "0628765432",
+    "organizaciona_jedinica": 7,
+    "radno_mesto": 4,
+    "rukovodilac": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.korisnik",
+  "pk": 7,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$Rp2NcmGXKST7OQFFnqiYjA$ptOyiwDVcqQQvoG/ZXPhGH6WCCn/IdmaTRHw7iqC9Wg=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "stefanmarkovic",
+    "first_name": "Aleksa",
+    "last_name": "Marković",
+    "email": "aleksa.markovic@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-02-08T15:40:16.365Z",
+    "role": "zaposleni",
+    "jmbg": "0207996710039",
+    "srednje_ime": "Milan",
+    "pol": "M",
+    "datum_rodjenja": "1996-07-02",
+    "drzava": "Srbija",
+    "adresa": "Kralja Petra I 23",
+    "mesto_rodjenja": "Kragujevac",
+    "strucna_sprema": "Fakultet",
+    "broj_telefona": "0655554445",
+    "organizaciona_jedinica": 11,
+    "radno_mesto": 10,
+    "rukovodilac": 4,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.korisnik",
+  "pk": 8,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$geLuNGTP4xZYcg5P6Q1HFS$XlNb21bteL/8tBHh9hmRGWZg1fg80YKID86wb+ruEg8=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "milicastojanovic",
+    "first_name": "Milica",
+    "last_name": "Stojanović",
+    "email": "milica.stojanovic@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-02-08T15:42:34.482Z",
+    "role": "rukovodilac",
+    "jmbg": "1812992710027",
+    "srednje_ime": "Ana",
+    "pol": "Z",
+    "datum_rodjenja": "1992-12-18",
+    "drzava": "Srbija",
+    "adresa": "Župana Stracimira 9",
+    "mesto_rodjenja": "Čačak",
+    "strucna_sprema": "Fakultet",
+    "broj_telefona": "0637778890",
+    "organizaciona_jedinica": 13,
+    "radno_mesto": 12,
+    "rukovodilac": 11,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.korisnik",
+  "pk": 9,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$vmcXN2jxlcDXxy7yQ0BsPM$rwc9UZq9MFzmShYSkA+v08ptTYXw+I/7jQoxXNfUO+Y=",
+    "last_login": "2026-02-08T18:27:21.750Z",
+    "is_superuser": false,
+    "username": "milanpavlovic",
+    "first_name": "Milan",
+    "last_name": "Pavlović",
+    "email": "milan.pavlovic@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-02-08T15:46:19.747Z",
+    "role": "rukovodilac",
+    "jmbg": "0904984710016",
+    "srednje_ime": "Dragan",
+    "pol": "M",
+    "datum_rodjenja": "1984-04-09",
+    "drzava": "Srbija",
+    "adresa": "Vojvode Mišića 27",
+    "mesto_rodjenja": "Valjevo",
+    "strucna_sprema": "Master",
+    "broj_telefona": "0631234890",
+    "organizaciona_jedinica": 14,
+    "radno_mesto": 13,
+    "rukovodilac": 11,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.korisnik",
+  "pk": 10,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$Ws9R3Gsllznp1kdkJ6YpE3$UWUEz59HFmVHh+pZ73+3r2sbfe/IO8ifeM55HYaiohQ=",
+    "last_login": "2026-08-30T09:43:54.395Z",
+    "is_superuser": false,
+    "username": "pavlepetrovic",
+    "first_name": "Pavle",
+    "last_name": "Petrović",
+    "email": "pavle.petrovic@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-02-08T15:50:17.077Z",
+    "role": "zaposleni",
+    "jmbg": "0101990712345",
+    "srednje_ime": "Marko",
+    "pol": "M",
+    "datum_rodjenja": "1990-01-01",
+    "drzava": "Srbija",
+    "adresa": "Vojvode Stepe Stepanović 130",
+    "mesto_rodjenja": "Beograd",
+    "strucna_sprema": "Viša škola",
+    "broj_telefona": "0641234567",
+    "organizaciona_jedinica": 14,
+    "radno_mesto": 17,
+    "rukovodilac": 9,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.korisnik",
+  "pk": 11,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$yxZixILsHvB9cga9QUHDmg$Pf1sc5IWAfo/KF9qE/T0q9+vrG8NKNI4G3BP9eBOeIo=",
+    "last_login": "2026-02-08T17:52:43.102Z",
+    "is_superuser": false,
+    "username": "draganivanovic",
+    "first_name": "Dragan",
+    "last_name": "Ivanović",
+    "email": "draganivanovic@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-02-08T16:00:37.173Z",
+    "role": "rukovodilac",
+    "jmbg": "1205780712345",
+    "srednje_ime": "Milan",
+    "pol": "M",
+    "datum_rodjenja": "1978-05-10",
+    "drzava": "Srbija",
+    "adresa": "Bulevar Milutina Milankovica 120",
+    "mesto_rodjenja": "Kraljevo",
+    "strucna_sprema": "Master",
+    "broj_telefona": "0612345678",
+    "organizaciona_jedinica": 12,
+    "radno_mesto": 18,
+    "rukovodilac": 6,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.korisnik",
+  "pk": 12,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$9M8XtsaRGzJuglhg8IAhZE$TrAx4Ylmmkczub4ngJwHnaU8sJQypHi0A/U7xO3qIXM=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "aleksandra",
+    "first_name": "Aleksandra ",
+    "last_name": "Krunić",
+    "email": "aleksandrakrunic@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-02-08T16:16:33.923Z",
+    "role": "zaposleni",
+    "jmbg": "2503940712345",
+    "srednje_ime": "Marija",
+    "pol": "Z",
+    "datum_rodjenja": "1994-03-25",
+    "drzava": "Srbija",
+    "adresa": "Kneza Višeslava 12",
+    "mesto_rodjenja": "Niš",
+    "strucna_sprema": "Fakultet",
+    "broj_telefona": "0649876543",
+    "organizaciona_jedinica": 11,
+    "radno_mesto": 11,
+    "rukovodilac": 4,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "firma.organizaciona_jedinica",
+  "pk": 7,
+  "fields": {
+    "naziv": "Top menadžment",
+    "opis": "",
+    "nadredjena_org_jed": null,
+    "rukovodilac": null
+  }
+},
+{
+  "model": "firma.organizaciona_jedinica",
+  "pk": 8,
+  "fields": {
+    "naziv": "Sektor za ljudske resurse (HR)",
+    "opis": "",
+    "nadredjena_org_jed": 7,
+    "rukovodilac": null
+  }
+},
+{
+  "model": "firma.organizaciona_jedinica",
+  "pk": 9,
+  "fields": {
+    "naziv": "Sektor finansija",
+    "opis": "",
+    "nadredjena_org_jed": 7,
+    "rukovodilac": null
+  }
+},
+{
+  "model": "firma.organizaciona_jedinica",
+  "pk": 10,
+  "fields": {
+    "naziv": "Sektor prodaje",
+    "opis": "",
+    "nadredjena_org_jed": 7,
+    "rukovodilac": null
+  }
+},
+{
+  "model": "firma.organizaciona_jedinica",
+  "pk": 11,
+  "fields": {
+    "naziv": "IT sektor",
+    "opis": "",
+    "nadredjena_org_jed": 7,
+    "rukovodilac": null
+  }
+},
+{
+  "model": "firma.organizaciona_jedinica",
+  "pk": 12,
+  "fields": {
+    "naziv": "Operativni sektor",
+    "opis": "",
+    "nadredjena_org_jed": 7,
+    "rukovodilac": null
+  }
+},
+{
+  "model": "firma.organizaciona_jedinica",
+  "pk": 13,
+  "fields": {
+    "naziv": "Odeljenje logistike",
+    "opis": "",
+    "nadredjena_org_jed": 12,
+    "rukovodilac": null
+  }
+},
+{
+  "model": "firma.organizaciona_jedinica",
+  "pk": 14,
+  "fields": {
+    "naziv": "Odeljenje proizvodnje",
+    "opis": "",
+    "nadredjena_org_jed": 12,
+    "rukovodilac": null
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 4,
+  "fields": {
+    "naziv": "Generalni direktor",
+    "opis": "",
+    "org_jed": 7
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 5,
+  "fields": {
+    "naziv": "HR menadžer",
+    "opis": "",
+    "org_jed": 8
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 6,
+  "fields": {
+    "naziv": "Finansijski menadžer",
+    "opis": "",
+    "org_jed": 9
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 7,
+  "fields": {
+    "naziv": "Izvršni direktor",
+    "opis": "",
+    "org_jed": 7
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 8,
+  "fields": {
+    "naziv": "Menadžer prodaje",
+    "opis": "",
+    "org_jed": 10
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 9,
+  "fields": {
+    "naziv": "IT menadžer",
+    "opis": "",
+    "org_jed": 11
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 10,
+  "fields": {
+    "naziv": "Backend developer",
+    "opis": "",
+    "org_jed": 11
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 11,
+  "fields": {
+    "naziv": "Frontend developer",
+    "opis": "",
+    "org_jed": 11
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 12,
+  "fields": {
+    "naziv": "Šef logistike",
+    "opis": "",
+    "org_jed": 13
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 13,
+  "fields": {
+    "naziv": "Rukovodilac proizvodnje",
+    "opis": "",
+    "org_jed": 14
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 14,
+  "fields": {
+    "naziv": "Sistem administrator",
+    "opis": "",
+    "org_jed": 11
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 15,
+  "fields": {
+    "naziv": "Računovođa",
+    "opis": "",
+    "org_jed": 9
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 16,
+  "fields": {
+    "naziv": "Operater proizvodnje",
+    "opis": "",
+    "org_jed": 14
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 17,
+  "fields": {
+    "naziv": "Radnik u proizvodnji",
+    "opis": "",
+    "org_jed": 14
+  }
+},
+{
+  "model": "firma.radno_mesto",
+  "pk": 18,
+  "fields": {
+    "naziv": "Rukovodilac operativnog sektora",
+    "opis": "",
+    "org_jed": 12
+  }
+},
+{
+  "model": "ciljevi.tip_cilja",
+  "pk": 1,
+  "fields": {
+    "naziv": "Grupni"
+  }
+},
+{
+  "model": "ciljevi.tip_cilja",
+  "pk": 2,
+  "fields": {
+    "naziv": "Individualni"
+  }
+},
+{
+  "model": "ciljevi.tip_cilja",
+  "pk": 3,
+  "fields": {
+    "naziv": "Kompanijski"
+  }
+},
+{
+  "model": "ciljevi.tip_cilja",
+  "pk": 4,
+  "fields": {
+    "naziv": "Operativni"
+  }
+},
+{
+  "model": "ciljevi.cilj",
+  "pk": 4,
+  "fields": {
+    "naziv": "Smanjiti broj grešaka u proizvodnji za 5%",
+    "tip_cilja": 4,
+    "status": "aktivan"
+  }
+},
+{
+  "model": "ciljevi.cilj",
+  "pk": 5,
+  "fields": {
+    "naziv": "Povećati proizvodnju za 10% u narednom kvartalu",
+    "tip_cilja": 4,
+    "status": "aktivan"
+  }
+},
+{
+  "model": "ciljevi.cilj",
+  "pk": 6,
+  "fields": {
+    "naziv": "Smanjiti otpad materijala za 5%",
+    "tip_cilja": 4,
+    "status": "aktivan"
+  }
+},
+{
+  "model": "ciljevi.dodeljeni_cilj",
+  "pk": 16,
+  "fields": {
+    "cilj": 4,
+    "zaposleni": 10,
+    "datum_Od": "2026-02-08",
+    "datum_Do": "2026-05-08"
+  }
+},
+{
+  "model": "ciljevi.dodeljeni_cilj",
+  "pk": 17,
+  "fields": {
+    "cilj": 5,
+    "zaposleni": 10,
+    "datum_Od": "2026-02-08",
+    "datum_Do": "2026-05-08"
+  }
+},
+{
+  "model": "ciljevi.dodeljeni_cilj",
+  "pk": 18,
+  "fields": {
+    "cilj": 6,
+    "zaposleni": 10,
+    "datum_Od": "2026-02-08",
+    "datum_Do": "2026-04-08"
+  }
+}
+]

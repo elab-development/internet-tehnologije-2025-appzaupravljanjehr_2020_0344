@@ -74,7 +74,7 @@ class Ocena_zaposlenog(models.Model):
     datum_Do = models.DateField()
 
     def ocene(self):
-        return [self.ocena_1, self.ocena_2, self.ocena_3, self.ocena_4, self.ocena5]
+        return [self.ocena_1, self.ocena_2, self.ocena_3, self.ocena_4, self.ocena_5]
 
     def clean(self):
         for i, ocena in enumerate(self.ocene(), start=1):
